@@ -12,10 +12,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
 
     return new MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Hande',
       home:new Login(),
       theme:new  ThemeData(
-        primarySwatch: Colors.orange
+        primaryColor: Colors.teal
       ),
     );
   }
@@ -43,8 +44,6 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin{
     _logoAnimation.addListener(()=>this.setState((){}));
     _logoAnimationController.forward();
   }
-
-
 
   @override
   Widget build(BuildContext context){
@@ -107,8 +106,7 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin{
                   child: new Text(
                     "Pas de compte? S'inscrire",
                     style: TextStyle(color:Colors.red),
-                  ),
-                  
+                  ), 
                 )
                   ])
               )
