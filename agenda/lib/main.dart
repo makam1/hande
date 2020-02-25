@@ -1,9 +1,11 @@
-// Copyright 2018 The Flutter team. All rights reserved.
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
 
+import 'dart:convert';
+
+import 'package:Hande/accueilPage.dart';
 import 'package:flutter/material.dart';
 //import 'package:english_words/english_words.dart';
+import 'package:http/http.dart' as http;
+import 'dart:async';
 
 void main() => runApp(MyApp());
 
@@ -18,6 +20,10 @@ class MyApp extends StatelessWidget {
       theme:new  ThemeData(
         primaryColor: Colors.teal
       ),
+      routes: <String,WidgetBuilder>{
+        '/accueilPage':(BuildContext context)=> new AccueilPage(),
+
+      },
     );
   }
 }
@@ -45,6 +51,22 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin{
     _logoAnimationController.forward();
   }
 
+  TextEditingController username = new TextEditingController();
+  TextEditingController password= new TextEditingController();
+
+  String msg='';
+  Future<List> _login() async {
+    final response= await http.post("https://c842da4c.ngrok.io/api/login",headers:{
+      'Accept': 'application/json',
+    }, body: {
+      "username":username.text,
+      "password":password.text,
+    });
+    
+    var datauser= json.decode(response.body);
+        print(response.body);
+  }
+
   @override
   Widget build(BuildContext context){
     return new Scaffold(
@@ -67,12 +89,14 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin{
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children:<Widget> [
                   new TextFormField(
+                    controller: username,
                   decoration: new InputDecoration(
                     labelText:"nom d'utilisateur", 
                   ),
                   keyboardType: TextInputType.text,
                   ),
                   new TextFormField(
+                    controller: password,
                   decoration: new InputDecoration(
                     labelText:"mot de passe", 
                   ),
@@ -97,9 +121,12 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin{
                   child: new Text(
                     "Connexion",
                   ),
-                  onPressed:()=>{},
+                  onPressed:()  {
+                   _login();
+                  },
                   splashColor: Colors.black,
                   ),
+                  Text(msg),
 
                   new Container(
                   padding: const EdgeInsets.only(top:10.0),
