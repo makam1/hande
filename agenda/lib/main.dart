@@ -1,6 +1,5 @@
 
 import 'dart:convert';
-import 'dart:html';
 import 'package:jaguar_jwt/jaguar_jwt.dart';
 import 'package:flutter/material.dart';
 //import 'package:english_words/english_words.dart';
@@ -61,15 +60,12 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin{
     }, body: {
       "username":username.text,
       "password":password.text,
+      "email":email.text,
     });
     
     var datauser= json.decode(response.body);
-    var token=datauser.values.toString();
-        print(token);
-    final parts = token.split('.');
-    final payload = parts[1];
-    final String decoded = B64urlEncRfc7515.decodeUtf8(payload);
-            print(decoded);
+        print(datauser);
+    
   }
 
   @override
@@ -109,55 +105,14 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin{
                   obscureText: true,
                 ),
 
-                new TextFormField(
-                    controller: nom,
-                  decoration: new InputDecoration(
-                    labelText:"nom", 
-                  ),
-                  keyboardType: TextInputType.text,
-                  ),
-
-                  new TextFormField(
-                    controller: prenom,
-                  decoration: new InputDecoration(
-                    labelText:"prenom", 
-                  ),
-                  keyboardType: TextInputType.text,
-                  ),
-
                   new TextFormField(
                     controller: email,
                   decoration: new InputDecoration(
-                    labelText:"email", 
-                  ),
-                  keyboardType: TextInputType.emailAddress,
-                  ),
-
-                  new TextFormField(
-                    controller: datenaissance,
-                  decoration: new InputDecoration(
-                    labelText:"Date de naissance", 
+                    labelText:"E-mail", 
                   ),
                    keyboardType: TextInputType.text,
                   ),
-
-                  new TextFormField(
-                    controller: telephone,
-                  decoration: new InputDecoration(
-                    labelText:"Telephone", 
-                  ),
-                  keyboardType: TextInputType.text,
-                  ),
-
-
-                new Container(
-                  padding: const EdgeInsets.only(left:80.0,top: 10.0),
-                  child: new Text(
-                    "Mot de passe oublié?",
-                    style: TextStyle(color:Colors.red),
-
-                  ),  
-                ),
+                
                 new Padding(
                 padding: const EdgeInsets.only(left:85.0,top: 10.0),
 
@@ -177,7 +132,7 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin{
                   new Container(
                   padding: const EdgeInsets.only(top:10.0),
                   child: new Text(
-                    "Pas de compte? S'inscrire",
+                    "Un compte? Se connecter",
                     style: TextStyle(color:Colors.red),
                   ), 
                 )
