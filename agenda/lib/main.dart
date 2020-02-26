@@ -1,7 +1,7 @@
 
 import 'dart:convert';
-
-import 'package:Hande/accueilPage.dart';
+import 'dart:html';
+import 'package:jaguar_jwt/jaguar_jwt.dart';
 import 'package:flutter/material.dart';
 //import 'package:english_words/english_words.dart';
 import 'package:http/http.dart' as http;
@@ -19,11 +19,7 @@ class MyApp extends StatelessWidget {
       home:new Login(),
       theme:new  ThemeData(
         primaryColor: Colors.teal
-      ),
-      routes: <String,WidgetBuilder>{
-        '/accueilPage':(BuildContext context)=> new AccueilPage(),
-
-      },
+      )
     );
   }
 }
@@ -53,10 +49,14 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin{
 
   TextEditingController username = new TextEditingController();
   TextEditingController password= new TextEditingController();
+  TextEditingController nom= new TextEditingController();
+  TextEditingController prenom= new TextEditingController();
+  TextEditingController email= new TextEditingController();
+  TextEditingController datenaissance= new TextEditingController();
+  TextEditingController telephone= new TextEditingController();
 
-  String msg='';
-  Future<List> _login() async {
-    final response= await http.post("https://cacc4532.ngrok.io/api/login",headers:{
+  Future<List> _register() async {
+    final response= await http.post("https://cacc4532.ngrok.io/api/login/inscription",headers:{
       'Accept': 'application/json',
     }, body: {
       "username":username.text,
@@ -64,7 +64,12 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin{
     });
     
     var datauser= json.decode(response.body);
-        print(response.body);
+    var token=datauser.values.toString();
+        print(token);
+    final parts = token.split('.');
+    final payload = parts[1];
+    final String decoded = B64urlEncRfc7515.decodeUtf8(payload);
+            print(decoded);
   }
 
   @override
@@ -103,6 +108,48 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin{
                   keyboardType: TextInputType.text,
                   obscureText: true,
                 ),
+
+                new TextFormField(
+                    controller: nom,
+                  decoration: new InputDecoration(
+                    labelText:"nom", 
+                  ),
+                  keyboardType: TextInputType.text,
+                  ),
+
+                  new TextFormField(
+                    controller: prenom,
+                  decoration: new InputDecoration(
+                    labelText:"prenom", 
+                  ),
+                  keyboardType: TextInputType.text,
+                  ),
+
+                  new TextFormField(
+                    controller: email,
+                  decoration: new InputDecoration(
+                    labelText:"email", 
+                  ),
+                  keyboardType: TextInputType.emailAddress,
+                  ),
+
+                  new TextFormField(
+                    controller: datenaissance,
+                  decoration: new InputDecoration(
+                    labelText:"Date de naissance", 
+                  ),
+                   keyboardType: TextInputType.text,
+                  ),
+
+                  new TextFormField(
+                    controller: telephone,
+                  decoration: new InputDecoration(
+                    labelText:"Telephone", 
+                  ),
+                  keyboardType: TextInputType.text,
+                  ),
+
+
                 new Container(
                   padding: const EdgeInsets.only(left:80.0,top: 10.0),
                   child: new Text(
@@ -119,14 +166,13 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin{
                   color: Colors.grey,
                   textColor: Colors.black,
                   child: new Text(
-                    "Connexion",
+                    "Envoyer",
                   ),
                   onPressed:()  {
-                   _login();
+                   _register();
                   },
                   splashColor: Colors.black,
                   ),
-                  Text(msg),
 
                   new Container(
                   padding: const EdgeInsets.only(top:10.0),
