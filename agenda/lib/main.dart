@@ -1,10 +1,16 @@
 
 import 'dart:convert';
+
+import 'package:flutter/cupertino.dart';
 import 'package:jaguar_jwt/jaguar_jwt.dart';
 import 'package:flutter/material.dart';
 //import 'package:english_words/english_words.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
+import 'package:date_format/date_format.dart';
+import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
+
+
 
 void main() => runApp(MyApp());
 
@@ -32,6 +38,7 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin{
   AnimationController _logoAnimationController;
   Animation<double>   _logoAnimation;
 
+
   @override
   void initState(){
     super.initState();
@@ -55,20 +62,24 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin{
   TextEditingController telephone= new TextEditingController();
 
   Future<List> _register() async {
-    final response= await http.post("https://cacc4532.ngrok.io/api/login/inscription",headers:{
+    final response= await http.post(Uri.encodeFull("https://0a4599a0.ngrok.io/api/login/inscription"),headers:{
       'Accept': 'application/json',
     }, body: {
       "username":username.text,
       "password":password.text,
       "email":email.text,
+      "datenaissance":formatDate(choix, [yyyy, '-', mm, '-', dd])
     });
     
-    var datauser= json.decode(response.body);
-        print(datauser);
+   // var datauser= json.decode(response.body);
+        print(response.body);
     
   }
+ double age;
+  DateTime choix=new DateTime.now();
 
   @override
+   
   Widget build(BuildContext context){
     return new Scaffold(
       backgroundColor: Colors.white,
@@ -110,7 +121,21 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin{
                   decoration: new InputDecoration(
                     labelText:"E-mail", 
                   ),
-                   keyboardType: TextInputType.text,
+                   keyboardType: TextInputType.emailAddress,
+                  ),
+                  new DateTimeField(
+                    controller: datenaissance,
+                  decoration: new InputDecoration(
+                    labelText:age==null?"Date de naissance":age<=18?
+                    "error":formatDate(choix, [dd, '-', mm, '-', yyyy]), 
+                  icon:IconButton (
+                    icon:new Icon(
+                      Icons.date_range,
+                    ),
+                    onPressed: (()=> montrerPicker())
+                    ),
+                  ),
+                  initialValue: choix,
                   ),
                 
                 new Padding(
@@ -143,8 +168,28 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin{
        ),
     );
   }
-}
 
+
+  Future<Null> montrerPicker() async{
+    DateTime date= await showDatePicker(
+      context: context,
+      initialDate: new DateTime.now(), 
+      firstDate: new DateTime(1940), 
+      lastDate: new DateTime.now(),
+      initialDatePickerMode: DatePickerMode.year,  
+       );
+      if(date!=null){
+        var difference= new DateTime.now().difference(date);
+        var jours= difference.inDays;
+        var ans= (jours/365);
+        setState((){
+          age =ans;
+          choix=date;
+
+        });
+      }
+  }  
+}
 
 /**class RandomWordsState extends State<RandomWords> {
   final _suggestions = <WordPair>[];
