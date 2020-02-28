@@ -1,4 +1,4 @@
-#Thu Feb 27 15:15:37 GMT 2020
+#Fri Feb 28 11:40:46 GMT 2020
 base.0=/home/mak/agenda/build/app/intermediates/dex/debug/mergeDexDebug/out/classes.dex
 path.0=classes.dex
 renamed.0=classes.dex
