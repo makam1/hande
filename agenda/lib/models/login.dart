@@ -1,5 +1,6 @@
 
 import 'dart:convert';
+import 'package:Hande/widgets/imagePicker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:jaguar_jwt/jaguar_jwt.dart';
 
@@ -7,11 +8,16 @@ import 'package:flutter/material.dart';
 //import 'package:english_words/english_words.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
+import 'package:Hande/widgets/home.dart';
+import 'package:Hande/widgets/register.dart';
+
+
 
 
 class Login extends StatefulWidget{
   @override
   State createState()=> new LoginState();
+
 }
 
 class LoginState extends State<Login> with SingleTickerProviderStateMixin{
@@ -35,38 +41,44 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin{
   TextEditingController username = new TextEditingController();
   TextEditingController password= new TextEditingController();
 
+  var token;
+
   String msg='';
   Future<List> _login() async {
-    final response= await http.post("https://cacc4532.ngrok.io/api/login",headers:{
+    final response= await http.post("https://d4ed6a76.ngrok.io/api/login",headers:{
       'Accept': 'application/json',
     }, body: {
       "username":username.text,
       "password":password.text,
     });
     if(response.statusCode==200){
-
       var datauser= json.decode(response.body);
-      var token=datauser.values.toString();
+      token=datauser.values.toString();
+      String decoded;
       print(token);
       final parts = token.split('.');
       final payload = parts[1];
-      final String decoded = B64urlEncRfc7515.decodeUtf8(payload);
+      decoded = B64urlEncRfc7515.decodeUtf8(payload);
       print(decoded);
+      setToken(token);
+      getToken();
 
-      addTokenToSF() async {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      prefs.setString('token', token);
-      }
-      getTokenFromSF() async {
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-       
-        String tokenValue = prefs.getString('token');
-        return tokenValue;
-      }
-    }
+      Navigator.push(context, MaterialPageRoute(builder: (context){
+            return ImageApp();
+          }));
+            }
     else{
       print("erreur :${response.body}");
     }
+  }
+  Future<bool> setToken(String value) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.setString('token', value);
+  }
+
+  Future<String> getToken() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString('token');
   }
 
   @override
@@ -144,5 +156,6 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin{
        ),
     );
   }
+
 }
 

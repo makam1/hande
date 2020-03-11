@@ -6,14 +6,15 @@ import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'package:date_format/date_format.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
+import 'package:Hande/models/login.dart';
 
 
-class Login extends StatefulWidget{
+class Register extends StatefulWidget{
   @override
-  State createState()=> new LoginState();
+  State createState()=> new RegisterState();
 }
 
-class LoginState extends State<Login> with SingleTickerProviderStateMixin{
+class RegisterState extends State<Register> with SingleTickerProviderStateMixin{
   AnimationController _logoAnimationController;
   Animation<double>   _logoAnimation;
 
@@ -40,9 +41,16 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin{
   TextEditingController datenaissance= new TextEditingController();
   TextEditingController telephone= new TextEditingController();
 
+
   Future<List> _register() async {
-    final response= await http.post(Uri.encodeFull("https://b0ae1adf.ngrok.io/api/login/inscription"),headers:{
+    String token = await LoginState().getToken();
+    String newStr = token.substring(1, token.length-1);
+
+    print(token);
+    final response= await http.post(Uri.encodeFull("https://f245895b.ngrok.io/api/login/inscription"),headers:{
       'Accept': 'application/json',
+      'Authorization': 'Bearer $newStr',
+
     }, body: {
       "username":username.text,
       "password":password.text,
@@ -50,9 +58,7 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin{
       "datenaissance":formatDate(choix, [yyyy, '-', mm, '-', dd])
     });
     
-   // var datauser= json.decode(response.body);
-        print(response.body);
-    
+        print(response.body);    
   }
  double age;
   DateTime choix=new DateTime.now();
@@ -106,17 +112,18 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin{
                     controller: datenaissance,
                   decoration: new InputDecoration(
                     labelText:age==null?"Date de naissance":age<=18?
-                    "error":formatDate(choix, [dd, '-', mm, '-', yyyy]), 
+                    "erreur":formatDate(choix, [dd, '-', mm, '-', yyyy]), 
                   icon:IconButton (
                     icon:new Icon(
                       Icons.date_range,
                     ),
                     onPressed: (()=> montrerPicker())
+                    
                     ),
                   ),
                   initialValue: choix,
-                  ),
-                
+                  ), 
+                                
                 new Padding(
                 padding: const EdgeInsets.only(left:85.0,top: 10.0),
 
@@ -144,8 +151,9 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin{
               )
             )],
           )],
+          
        ),
-    );
+    );  
   }
 
 
@@ -167,5 +175,28 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin{
 
         });
       }
-  }  
+  } 
+   void _showDialog() {
+    // flutter defined function
+    if(age<=18){
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          title: new Text("HANDE"),
+          content: new Text("Demandez à votre tuteur de vous inscrire"),
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+            new FlatButton(
+              child: new Text("Fermer"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  } }
 }

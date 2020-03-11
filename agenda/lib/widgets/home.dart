@@ -1,7 +1,16 @@
+import 'dart:io';
+
+import 'package:Hande/main.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:Hande/models/login.dart';
 import 'package:date_format/date_format.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:gallery_saver/gallery_saver.dart';
+import 'package:Hande/widgets/imagePicker.dart';
+
+
 
 
 class Home extends StatefulWidget {
@@ -13,6 +22,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home>{
+  File imageFile;
 
   @override
   void initState() {
@@ -28,8 +38,8 @@ class _HomeState extends State<Home>{
      appBar: new AppBar(
       
       title:new  Text(
-        today,
-        style: TextStyle(fontSize: 15.0,fontStyle:FontStyle.italic,color: Colors.grey ),
+        'HANDE     $today',
+        style: TextStyle(fontSize: 15.0,fontStyle:FontStyle.italic,),
         ),
         flexibleSpace: Container(
           decoration: BoxDecoration(
@@ -38,14 +48,8 @@ class _HomeState extends State<Home>{
                 end: Alignment.bottomRight,
                 colors: <Color>[
               Colors.red[500],
-              Colors.yellow[300]
+              Colors.yellow[400],
             ]))),         
-      leading: GestureDetector(
-          onTap: () { /* Write listener code here */ },
-          child: Icon(
-            Icons.home,  // add custom icons also
-          ),
-      ),
       actions: <Widget>[
         Padding(
           padding: EdgeInsets.only(right: 20.0),
@@ -57,16 +61,7 @@ class _HomeState extends State<Home>{
         ),
       )
     ),
-     Padding(
-          padding: EdgeInsets.only(right: 20.0),
-      child: GestureDetector(
-        onTap: () {},
-        child: Icon(
-          Icons.notifications,
-          size: 26.0,
-        ),
-      )
-    ),
+     
     Padding(
       padding: EdgeInsets.only(right: 20.0),
       child: GestureDetector(
@@ -79,16 +74,108 @@ class _HomeState extends State<Home>{
         ],
       
       ),  
-      body:login(),
+      body:Container(
+        child: Center(
+          child:Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: <Widget>[
+              Text('image'),
+              _decideImageWidget(),
+              RaisedButton(onPressed: (){
+                _showDialog(context);
+              },
+              child:Text('Choisir image')
+              )
+            ],)
+        ),
+      ),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.pink,
+        child: Icon(
+          Icons.add,
+          size: 26.0,
+        ),
         onPressed: (){
           Navigator.push(context, MaterialPageRoute(builder: (context){
-            return Login();
+            return ImageApp();
           }));
         },
       ),
                 );
         }
-      
-        login() {}    
+
+  Widget _decideImageWidget(){
+    if(imageFile==null){
+      return Text('photo');
+    }else{
+      return Image.file(imageFile,width: 100,height: 100,);
+    }
+  }
+
+  _openGallerie(BuildContext context) async {
+    var image = await ImagePicker.pickImage(source: ImageSource.gallery);
+
+    // final path = await getApplicationDocumentsDirectory();
+    // final  fileName = basename(file.path);
+    // final File localImage = await image.copy('assets/$fileName');    
+
+    this.setState((){
+          imageFile = image;
+    });
+    Navigator.of(context).pop();
+
+  }
+
+   _openCamera(BuildContext context) async{
+     var image = await ImagePicker.pickImage(source: ImageSource.camera)
+     .then((File recordedImage) {
+        GallerySaver.saveImage(recordedImage.path).then((bool path){
+          setState(() {
+            
+          });
+        });
+      });
+
+    this.setState((){  
+      imageFile = image;
+    });
+    
+    Navigator.of(context).pop();
+
+    }  
+
+
+  Future <void> _showDialog(BuildContext context) {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: new Text("Photo"),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                GestureDetector( 
+                  child: Text('Gallerie'),
+                  onTap: (){
+                    _openGallerie(context);
+                  },
+                ),
+                Padding(padding: EdgeInsets.all(5.0)),
+                GestureDetector(
+                  child: Text('Camera'),
+                  onTap: (){
+                    _openCamera(context);
+                  },
+                )
+              ],
+            ),)
+
+        );
+      },
+    );
+  }
+
+  
 }
+
+

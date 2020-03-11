@@ -4,6 +4,24 @@
 
 #import "GeneratedPluginRegistrant.h"
 
+#if __has_include(<gallery_saver/GallerySaverPlugin.h>)
+#import <gallery_saver/GallerySaverPlugin.h>
+#else
+@import gallery_saver;
+#endif
+
+#if __has_include(<image_picker/FLTImagePickerPlugin.h>)
+#import <image_picker/FLTImagePickerPlugin.h>
+#else
+@import image_picker;
+#endif
+
+#if __has_include(<path_provider/FLTPathProviderPlugin.h>)
+#import <path_provider/FLTPathProviderPlugin.h>
+#else
+@import path_provider;
+#endif
+
 #if __has_include(<shared_preferences/FLTSharedPreferencesPlugin.h>)
 #import <shared_preferences/FLTSharedPreferencesPlugin.h>
 #else
@@ -13,6 +31,9 @@
 @implementation GeneratedPluginRegistrant
 
 + (void)registerWithRegistry:(NSObject<FlutterPluginRegistry>*)registry {
+  [GallerySaverPlugin registerWithRegistrar:[registry registrarForPlugin:@"GallerySaverPlugin"]];
+  [FLTImagePickerPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTImagePickerPlugin"]];
+  [FLTPathProviderPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTPathProviderPlugin"]];
   [FLTSharedPreferencesPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTSharedPreferencesPlugin"]];
 }
 
