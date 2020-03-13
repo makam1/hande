@@ -1,6 +1,5 @@
 
 import 'dart:convert';
-import 'package:Hande/widgets/imagePicker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:jaguar_jwt/jaguar_jwt.dart';
 
@@ -45,7 +44,7 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin{
 
   String msg='';
   Future<List> _login() async {
-    final response= await http.post("https://d4ed6a76.ngrok.io/api/login",headers:{
+    final response= await http.post("https://5408c3df.ngrok.io/api/login",headers:{
       'Accept': 'application/json',
     }, body: {
       "username":username.text,
@@ -64,7 +63,7 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin{
       getToken();
 
       Navigator.push(context, MaterialPageRoute(builder: (context){
-            return ImageApp();
+            return Register();
           }));
             }
     else{

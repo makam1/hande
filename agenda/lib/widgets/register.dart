@@ -1,4 +1,7 @@
 
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 //import 'package:english_words/english_words.dart';
@@ -7,6 +10,13 @@ import 'dart:async';
 import 'package:date_format/date_format.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:Hande/models/login.dart';
+import 'package:Hande/widgets/ImageInputAdapter.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:gallery_saver/gallery_saver.dart';
+import 'package:image/image.dart' as pic;
+
+
 
 
 class Register extends StatefulWidget{
@@ -47,7 +57,7 @@ class RegisterState extends State<Register> with SingleTickerProviderStateMixin{
     String newStr = token.substring(1, token.length-1);
 
     print(token);
-    final response= await http.post(Uri.encodeFull("https://f245895b.ngrok.io/api/login/inscription"),headers:{
+    final response= await http.post(Uri.encodeFull("https://5408c3df.ngrok.io/api/ajout"),headers:{
       'Accept': 'application/json',
       'Authorization': 'Bearer $newStr',
 
@@ -55,16 +65,28 @@ class RegisterState extends State<Register> with SingleTickerProviderStateMixin{
       "username":username.text,
       "password":password.text,
       "email":email.text,
-      "datenaissance":formatDate(choix, [yyyy, '-', mm, '-', dd])
+      "datenaissance":formatDate(choix, [yyyy, '-', mm, '-', dd]),
+      "imageFile":base64Encode(imageFile.readAsBytesSync())
+
     });
     
-        print(response.body);    
+        print(response.body); 
+        print('encode    '+base64Encode(imageFile.readAsBytesSync()));   
   }
  double age;
+  File imageFile;
+
   DateTime choix=new DateTime.now();
 
+   Widget _decideImageWidget(){
+    if(imageFile==null){
+      return Text('photo');
+    }else{
+      return Image.file(imageFile,width: 60,height: 60);
+    }
+  }
+
   @override
-   
   Widget build(BuildContext context){
     return new Scaffold(
       backgroundColor: Colors.white,
@@ -122,8 +144,21 @@ class RegisterState extends State<Register> with SingleTickerProviderStateMixin{
                     ),
                   ),
                   initialValue: choix,
-                  ), 
-                                
+                  ),
+                  new Padding(
+                padding: const EdgeInsets.only(left:85.0,top: 10.0),
+
+                ),Row(
+                   mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: <Widget>[
+                          _decideImageWidget(),
+                          RaisedButton(onPressed: (){
+                          _imageDialog(context);
+                        },
+                        child:Text('Choisir image')
+                        )
+                  ],)
+               ,                  
                 new Padding(
                 padding: const EdgeInsets.only(left:85.0,top: 10.0),
 
@@ -178,7 +213,7 @@ class RegisterState extends State<Register> with SingleTickerProviderStateMixin{
   } 
    void _showDialog() {
     // flutter defined function
-    if(age<=18){
+
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -198,5 +233,58 @@ class RegisterState extends State<Register> with SingleTickerProviderStateMixin{
         );
       },
     );
-  } }
+  } 
+   _openGallerie(BuildContext context) async {
+    var image = await ImagePicker.pickImage(source: ImageSource.gallery);
+
+    this.setState((){
+      imageFile = image;
+    });
+    Navigator.of(context).pop();
+  }
+
+
+   _openCamera(BuildContext context) async{
+    var image = await ImagePicker.pickImage(source: ImageSource.camera);
+
+    this.setState((){  
+      imageFile = image;
+    });
+    GallerySaver.saveImage(imageFile.path);
+    Navigator.of(context).pop();
+
+    }  
+
+
+  Future <void> _imageDialog(BuildContext context) {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: new Text("Photo"),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                GestureDetector( 
+                  child: Text('Gallerie'),
+                  onTap: (){
+                    _openGallerie(context);
+                  },
+                ),
+                Padding(padding: EdgeInsets.all(5.0)),
+                GestureDetector(
+                  child: Text('Camera'),
+                  onTap: (){
+                    _openCamera(context);
+                  },
+                )
+              ],
+            ),)
+
+        );
+      },
+    );
+  }
+
 }
+

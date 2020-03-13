@@ -1,6 +1,7 @@
 import 'dart:io';
 
-import 'package:Hande/main.dart';
+
+import 'package:image/image.dart' as pic;
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:Hande/models/login.dart';
@@ -8,10 +9,6 @@ import 'package:date_format/date_format.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:gallery_saver/gallery_saver.dart';
-import 'package:Hande/widgets/imagePicker.dart';
-
-
-
 
 class Home extends StatefulWidget {
   Home({Key key, this.title}): super(key:key);
@@ -36,9 +33,8 @@ class _HomeState extends State<Home>{
   Widget build(BuildContext context) {
     return new Scaffold(
      appBar: new AppBar(
-      
       title:new  Text(
-        'HANDE     $today',
+        'HANDE',
         style: TextStyle(fontSize: 15.0,fontStyle:FontStyle.italic,),
         ),
         flexibleSpace: Container(
@@ -97,7 +93,7 @@ class _HomeState extends State<Home>{
         ),
         onPressed: (){
           Navigator.push(context, MaterialPageRoute(builder: (context){
-            return ImageApp();
+            return Login();
           }));
         },
       ),
@@ -115,31 +111,29 @@ class _HomeState extends State<Home>{
   _openGallerie(BuildContext context) async {
     var image = await ImagePicker.pickImage(source: ImageSource.gallery);
 
-    // final path = await getApplicationDocumentsDirectory();
-    // final  fileName = basename(file.path);
-    // final File localImage = await image.copy('assets/$fileName');    
-
     this.setState((){
           imageFile = image;
     });
-    Navigator.of(context).pop();
 
+    final directory = await getApplicationDocumentsDirectory();
+    final path=directory.path;
+
+    final img = pic.decodeImage(imageFile.readAsBytesSync());
+    final thumbnail = pic.copyResize(img);
+    
+    File('$path/${DateTime.now().toUtc().toIso8601String()}.png')
+      ..writeAsBytesSync(pic.encodePng(thumbnail));
+    Navigator.of(context).pop();
   }
 
+
    _openCamera(BuildContext context) async{
-     var image = await ImagePicker.pickImage(source: ImageSource.camera)
-     .then((File recordedImage) {
-        GallerySaver.saveImage(recordedImage.path).then((bool path){
-          setState(() {
-            
-          });
-        });
-      });
+    var image = await ImagePicker.pickImage(source: ImageSource.camera);
 
     this.setState((){  
       imageFile = image;
     });
-    
+    GallerySaver.saveImage(imageFile.path);
     Navigator.of(context).pop();
 
     }  
