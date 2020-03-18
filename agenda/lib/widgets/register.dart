@@ -1,7 +1,7 @@
 
-import 'dart:convert';
 import 'dart:io';
-
+import 'package:async/async.dart';
+import 'package:path/path.dart' as path;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 //import 'package:english_words/english_words.dart';
@@ -15,6 +15,10 @@ import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:gallery_saver/gallery_saver.dart';
 import 'package:image/image.dart' as pic;
+import 'package:http_parser/http_parser.dart';
+import 'dart:convert';
+
+
 
 
 
@@ -43,6 +47,8 @@ class RegisterState extends State<Register> with SingleTickerProviderStateMixin{
     _logoAnimationController.forward();
   }
 
+  
+
   TextEditingController username = new TextEditingController();
   TextEditingController password= new TextEditingController();
   TextEditingController nom= new TextEditingController();
@@ -57,22 +63,58 @@ class RegisterState extends State<Register> with SingleTickerProviderStateMixin{
     String newStr = token.substring(1, token.length-1);
 
     print(token);
-    final response= await http.post(Uri.encodeFull("https://5408c3df.ngrok.io/api/ajout"),headers:{
-      'Accept': 'application/json',
-      'Authorization': 'Bearer $newStr',
+    // final response= await http.post(Uri.encodeFull("https://5408c3df.ngrok.io/api/ajout"),headers:{
+    //   'Accept': 'application/json',
+    //   'Authorization': 'Bearer $newStr',
 
-    }, body: {
-      "username":username.text,
-      "password":password.text,
-      "email":email.text,
-      "datenaissance":formatDate(choix, [yyyy, '-', mm, '-', dd]),
-      "imageFile":base64Encode(imageFile.readAsBytesSync())
+    // }, body: {
+    //   "username":username.text,
+    //   "password":password.text,
+    //   "email":email.text,
+    //   "datenaissance":formatDate(choix, [yyyy, '-', mm, '-', dd]),
+    //   "imageFile":base64Encode(imageFile.readAsBytesSync())
 
-    });
+    // });
     
-        print(response.body); 
-        print('encode    '+base64Encode(imageFile.readAsBytesSync()));   
+        // print(response.body); 
+        // print('encode    '+base64Encode(imageFile.readAsBytesSync())); 
+
+    Map<String, String> headers = { "Authorization": "Bearer $newStr"};
+
+    // string to uri
+    var uri = Uri.parse("https://5efb97bf.ngrok.io/api/ajout");
+
+    // new multipart request
+    var request = new http.MultipartRequest("POST", uri);
+        request.headers.addAll(headers);
+    var multipartFile = new http.MultipartFile.fromBytes(
+        'imageFile',
+        imageFile.readAsBytesSync(),
+        contentType: MediaType('image', 'jpeg'),
+        filename: username.text+'.jpg'
+      );
+
+
+    // if you want more data in the request
+    request.fields['username'] = username.text;
+    request.fields['password'] = password.text;
+    request.fields['role'] = 'ROLE_ENFANT';
+    request.fields['email'] = email.text;
+    request.fields['datenaissance'] = formatDate(choix, [yyyy, '-', mm, '-', dd]);
+    // add multipart form to request
+    request.files.add(multipartFile);
+
+    // send request
+    var response = await request.send();
+    final respStr = await response.stream.bytesToString();
+
+    if (response.statusCode == "200") {
+      print(response);
+    }
+    print(respStr);
+
   }
+
  double age;
   File imageFile;
 
@@ -250,7 +292,9 @@ class RegisterState extends State<Register> with SingleTickerProviderStateMixin{
     this.setState((){  
       imageFile = image;
     });
+
     GallerySaver.saveImage(imageFile.path);
+    
     Navigator.of(context).pop();
 
     }  

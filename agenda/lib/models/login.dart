@@ -44,7 +44,7 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin{
 
   String msg='';
   Future<List> _login() async {
-    final response= await http.post("https://5408c3df.ngrok.io/api/login",headers:{
+    final response= await http.post("https://5efb97bf.ngrok.io/api/login",headers:{
       'Accept': 'application/json',
     }, body: {
       "username":username.text,
@@ -90,11 +90,12 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin{
           new Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              new Image(
-                image: new AssetImage("assets/calendar.png"),
-                height: _logoAnimation.value*99,
+              //Home().createState().pp(),
+              // new Image(
+              //   image: new AssetImage("assets/calendar.png"),
+              //   height: _logoAnimation.value*99,
                 
-              ),
+              // ),
               new Form(
                 child: new Container(
                   padding: const EdgeInsets.only(left:50.0,right: 50.0),
