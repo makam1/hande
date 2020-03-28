@@ -1,5 +1,6 @@
 
 import 'dart:convert';
+import 'package:Hande/widgets/UsersList.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:jaguar_jwt/jaguar_jwt.dart';
 
@@ -44,7 +45,7 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin{
 
   String msg='';
   Future<List> _login() async {
-    final response= await http.post("https://5efb97bf.ngrok.io/api/login",headers:{
+    final response= await http.post("https://bdfbfa40.ngrok.io/api/login",headers:{
       'Accept': 'application/json',
     }, body: {
       "username":username.text,
@@ -63,7 +64,7 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin{
       getToken();
 
       Navigator.push(context, MaterialPageRoute(builder: (context){
-            return Register();
+            return UsersScreen();
           }));
             }
     else{
@@ -82,6 +83,7 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin{
 
   @override
   Widget build(BuildContext context){
+    
     return new Scaffold(
       backgroundColor: Colors.white,
       body: new Stack(
@@ -90,6 +92,7 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin{
           new Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
+              
               //Home().createState().pp(),
               // new Image(
               //   image: new AssetImage("assets/calendar.png"),
@@ -148,6 +151,7 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin{
                     "Pas de compte? S'inscrire",
                     style: TextStyle(color:Colors.red),
                   ), 
+                  
                 )
                   ])
               )

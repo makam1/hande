@@ -1,5 +1,6 @@
 
 import 'dart:io';
+import 'package:Hande/widgets/home.dart';
 import 'package:async/async.dart';
 import 'package:path/path.dart' as path;
 import 'package:flutter/cupertino.dart';
@@ -138,11 +139,22 @@ class RegisterState extends State<Register> with SingleTickerProviderStateMixin{
           new Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              new Image(
-                image: new AssetImage("assets/calendar.png"),
-                height: _logoAnimation.value*99,
-                
-              ),
+              new Container(
+                    width: 190.0,
+                    height: 190.0,
+                    decoration: new BoxDecoration(
+                        shape: BoxShape.circle,
+                        image: new DecorationImage(
+                            fit: BoxFit.fill,
+                            image: new AssetImage("assets/calendar.png"))
+                        )
+                    ),
+              //Home().createState().pp(),
+              // new Image(
+              //   image: new AssetImage("assets/calendar.png"),
+              //   height: _logoAnimation.value*99,  
+              // ),
+              
               new Form(
                 child: new Container(
                   padding: const EdgeInsets.only(left:50.0,right: 50.0),

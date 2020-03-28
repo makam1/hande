@@ -132,6 +132,7 @@ layout notification_template_media
 layout notification_template_media_custom
 layout notification_template_part_chronometer
 layout notification_template_part_time
+mipmap calendar
 mipmap ic_launcher
 string status_bar_notification_info_overflow
 style LaunchTheme

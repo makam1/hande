@@ -10,8 +10,10 @@ import 'package:date_format/date_format.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:gallery_saver/gallery_saver.dart';
-import 'package:Hande/widgets/ImageInputAdapter.dart';
+import 'package:Hande/widgets/UsersList.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:path/path.dart' ;
+
 
 class Home extends StatefulWidget {
   Home({Key key, this.title}): super(key:key);
@@ -24,10 +26,12 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home>{
   File imageFile;
  File newImage ;
+ 
 
 
   @override
   void initState() {
+    WidgetsFlutterBinding.ensureInitialized();
     // TODO: implement initState
     super.initState();
   }
@@ -107,46 +111,51 @@ class _HomeState extends State<Home>{
 
   pp() async{
       SharedPreferences prefs = await SharedPreferences.getInstance();
+      return prefs.getString('test_image');
       // Step 2: Loading image by using the path that we saved earlier. We can create a file using path 
       //         and can use FileImage provider for loading image from file.
-      CircleAvatar(
-                backgroundImage: FileImage(File(prefs.getString('test_image')),            
-                ));
+      //  CircleAvatar(
+      //           backgroundImage: FileImage(File(prefs.getString('test_image')),            
+      //           ));
+      
    }
 
   Widget _decideImageWidget(){
     if(imageFile==null){
       return Text('photo');
     }else{
-      return pp();
+      return Image.file(imageFile,width: 100,height: 100);
     }
   }
 
   _openGallerie(BuildContext context) async {
     var image = await ImagePicker.pickImage(source: ImageSource.gallery);
-    
-    final directory = await getApplicationDocumentsDirectory();
-     final path=directory.path;
-      // SharedPreferences prefs = await SharedPreferences.getInstance();
-
-      // prefs.setString('test_image', newImage.path);
-
-
-    // var bytes = await rootBundle.load("assets/user_profil");
-
-    // final img = pic.decodeImage(imageFile.readAsBytesSync());
-    // //final thumbnail = pic.copyResize(img);
-    
-    // File('assets/user_profil/${DateTime.now().toUtc().toIso8601String()}.png')
-    //   ..writeAsBytesSync(pic.encodePng(img));
-
-    this.setState((){
+     this.setState((){
           imageFile = image;
     });
-        Navigator.of(context).pop();
-    newImage = await image.copy('assets/');
-
+ 
+    
+    Navigator.of(context).pop();
+    final directory = await getApplicationDocumentsDirectory();
+    final path="assets/xml";
+    String xmlString =  await rootBundle.loadString('assets');
+    
+    final fileName = basename(image.path);
+    
+    // final File localImage = await image.copy('$path/$fileName');
+    // SharedPreferences prefs = await SharedPreferences.getInstance();
+    // prefs.setString('test_image', localImage.path);
+    final img = pic.decodeImage(image.readAsBytesSync());
+    print('chemin: $xmlString');
+    
+    //final thumbnail = pic.copyResize(img);
+    File('$path/$fileName')
+        ..writeAsBytesSync(pic.encodePng(img));
+   
+    //newImage = await image.copy('assets/');
+    
   }
+
 
 
 
@@ -191,8 +200,6 @@ class _HomeState extends State<Home>{
       },
     );
   }
-
-  
 }
 
 
