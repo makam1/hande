@@ -1,5 +1,6 @@
 
 import 'dart:io';
+import 'package:Hande/widgets/UsersList.dart';
 import 'package:Hande/widgets/home.dart';
 import 'package:async/async.dart';
 import 'package:path/path.dart' as path;
@@ -11,7 +12,6 @@ import 'dart:async';
 import 'package:date_format/date_format.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:Hande/models/login.dart';
-import 'package:Hande/widgets/ImageInputAdapter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:gallery_saver/gallery_saver.dart';
@@ -63,7 +63,10 @@ class RegisterState extends State<Register> with SingleTickerProviderStateMixin{
     String token = await LoginState().getToken();
     String newStr = token.substring(1, token.length-1);
 
+    int id= await UsersList().getId();
+
     print(token);
+    print(id);
     // final response= await http.post(Uri.encodeFull("https://5408c3df.ngrok.io/api/ajout"),headers:{
     //   'Accept': 'application/json',
     //   'Authorization': 'Bearer $newStr',
@@ -80,10 +83,10 @@ class RegisterState extends State<Register> with SingleTickerProviderStateMixin{
         // print(response.body); 
         // print('encode    '+base64Encode(imageFile.readAsBytesSync())); 
 
-    Map<String, String> headers = { "Authorization": "Bearer $newStr"};
+    Map<String, String> headers = { "Authorization": "Bearer $newStr",};
 
     // string to uri
-    var uri = Uri.parse("https://5efb97bf.ngrok.io/api/ajout");
+    var uri = Uri.parse("https://8ca5739f.ngrok.io/api/evenement/$id/image");
 
     // new multipart request
     var request = new http.MultipartRequest("POST", uri);
@@ -97,11 +100,11 @@ class RegisterState extends State<Register> with SingleTickerProviderStateMixin{
 
 
     // if you want more data in the request
-    request.fields['username'] = username.text;
-    request.fields['password'] = password.text;
-    request.fields['role'] = 'ROLE_ENFANT';
-    request.fields['email'] = email.text;
-    request.fields['datenaissance'] = formatDate(choix, [yyyy, '-', mm, '-', dd]);
+    // request.fields['username'] = username.text;
+    // request.fields['password'] = password.text;
+    // request.fields['role'] = 'ROLE_ENFANT';
+    // request.fields['email'] = email.text;
+    // request.fields['datenaissance'] = formatDate(choix, [yyyy, '-', mm, '-', dd]);
     // add multipart form to request
     request.files.add(multipartFile);
 

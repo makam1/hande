@@ -35,10 +35,10 @@ class Users{
        });
        print(response);
     if(response.statusCode==200){
-      Map <String, dynamic> mapResponse= jsonDecode(response.body);
-      final users= mapResponse['data'].cost<Map<String, dynamic>>();
-      final listOfUsers= await users.map<Users>((json){
-        return Users.fromJson(json[0]);
+       Map <String, dynamic> mapResponse= jsonDecode(response.body);
+       final users= mapResponse[0].cost<Map<String, dynamic>>();
+       final listOfUsers= await users.map<Users>((json){
+         return Users.fromJson(json[0]);
       }).toList();
         return listOfUsers;
       }else{
