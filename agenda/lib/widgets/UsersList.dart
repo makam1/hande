@@ -22,12 +22,14 @@ final List users;
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getInt('id');
   }
-
+  String imageName;
+  
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
       itemCount: users.length,
       itemBuilder:(context,index ){
+        imageName=users[index]['imageName'];
       return GestureDetector(
          child: Container(
            padding: EdgeInsets.all(10.0),
@@ -44,12 +46,12 @@ final List users;
                         image: new DecorationImage(
                             fit: BoxFit.fill,
                             image: 
-                            new NetworkImage("https://github.com/makam1/hand-back/tree/master/public/images/users/12910896_474910412694707_1787253627_n.jpg")
+                            new NetworkImage("https://github.com/makam1/ASA/blob/master/public/images/users/$imageName?raw=true")
                             //AssetImage("assets/calendar.png")
                             )
                         )
                 ),
-                new Text(users[index]['prenom'],style:TextStyle(fontWeight: FontWeight.bold,fontSize:16.0)),
+                new Text(users[index]['imageName'],style:TextStyle(fontWeight: FontWeight.bold,fontSize:16.0)),
                 new Text(users[index]['nom'],style:TextStyle(fontSize:16.0)),
             ],
           ), 

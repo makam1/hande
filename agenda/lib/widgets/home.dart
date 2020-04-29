@@ -25,9 +25,9 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home>{
   File imageFile;
- File newImage ;
- 
+  File newImage ;
 
+ 
 
   @override
   void initState() {
@@ -37,6 +37,7 @@ class _HomeState extends State<Home>{
   }
   static DateTime date= new DateTime.now();
   String today =formatDate(new DateTime.now(), [dd, ' ',M, ' ', yyyy]);
+  
 
   @override
   Widget build(BuildContext context) {
@@ -80,20 +81,167 @@ class _HomeState extends State<Home>{
       
       ),  
       body:Container(
-        child: Center(
           child:Column(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Text('image'),
-              _decideImageWidget(),
-              RaisedButton(onPressed: (){
-                _showDialog(context);
-              },
-              child:Text('Choisir image')
-              )
+              Padding(padding: const EdgeInsets.only(top:20.0)),
+              Row(
+                children: <Widget>[
+                  Padding(padding: const EdgeInsets.only(left:30.0)),
+                  Text("Lun",style:TextStyle(
+                    fontSize:15,
+                    fontWeight: FontWeight.bold
+                  )),
+                  Padding(padding: const EdgeInsets.only(left:50.0)),
+                  Text('Matin',style:TextStyle(
+                    fontSize:10)),
+                  Padding(padding: const EdgeInsets.only(left:50.0)),
+                  Text('Après-midi',style:TextStyle(
+                    fontSize:10)),
+                  Padding(padding: const EdgeInsets.only(left:50.0)),
+                  Text('Soir',style:TextStyle(
+                    fontSize:10)),                 
+                ]
+              ),
+              Row(
+                children: <Widget>[
+                  Padding(padding: const EdgeInsets.only(left:100.0)),
+                  Container(
+                    color: Colors.pink,
+                    child: Text('-------',style:TextStyle(color:Colors.pink))
+                  )              
+                ]
+              ),
+              Row(
+                children: <Widget>[
+                  Padding(padding: const EdgeInsets.only(left:100.0)),
+                  Container(
+                    color: Colors.yellow,
+                    child: Text('-------',style:TextStyle(color:Colors.yellow))
+                  )               
+                ]
+              ),
+               Row(
+                children: <Widget>[
+                  Padding(padding: const EdgeInsets.only(left:30.0)),
+                  Text("Mar",style:TextStyle(
+                    fontSize:15,
+                    fontWeight: FontWeight.bold
+                  )),   
+                ]
+              ),
+              Row(
+                children: <Widget>[
+                  Padding(padding: const EdgeInsets.only(left:300.0)),
+                  Container(
+                    color: Colors.red,
+                    child: Text('-------',style:TextStyle(color:Colors.red))
+                  )              
+                ]
+              ),
+              Padding(padding: const EdgeInsets.only(top:10.0)),
+               Row(
+                children: <Widget>[
+                  Padding(padding: const EdgeInsets.only(left:30.0)),
+                  Text("Mer",style:TextStyle(
+                    fontSize:15,
+                    fontWeight: FontWeight.bold
+                  )),
+                  
+                ]
+              ),
+              Padding(padding: const EdgeInsets.only(top:40.0)),
+               Row(
+                children: <Widget>[
+                  Padding(padding: const EdgeInsets.only(left:30.0)),
+                  Text("Jeu",style:TextStyle(
+                    fontSize:15,
+                    fontWeight: FontWeight.bold
+                  )),
+                  
+                ]
+              ),
+              Row(
+                children: <Widget>[
+                  Padding(padding: const EdgeInsets.only(left:200.0)),
+                  Container(
+                    color: Colors.pink,
+                    child: Text('-------',style:TextStyle(color:Colors.pink))
+                  )              
+                ]
+              ),
+               Padding(padding: const EdgeInsets.only(top:10.0)),
+               Row(
+                children: <Widget>[
+                  Padding(padding: const EdgeInsets.only(left:30.0)),
+                  Text("Ven",style:TextStyle(
+                    fontSize:15,
+                    fontWeight: FontWeight.bold
+                  )), 
+                ]
+              ),
+              Row(
+                children: <Widget>[
+                  Padding(padding: const EdgeInsets.only(left:100.0)),
+                  Container(
+                    color: Colors.yellow,
+                    child: Text('-------',style:TextStyle(color:Colors.yellow))
+                  )              
+                ]
+              ),
+              Padding(padding: const EdgeInsets.only(top:10.0)),
+               Row(
+                children: <Widget>[
+                  Padding(padding: const EdgeInsets.only(left:30.0)),
+                  Text("Sam",style:TextStyle(
+                    fontSize:15,
+                    fontWeight: FontWeight.bold
+                  )),
+                  
+                ]
+              ),
+              Row(
+                children: <Widget>[
+                  Padding(padding: const EdgeInsets.only(left:200.0)),
+                  Container(
+                    color: Colors.red,
+                    child: Text('-------',style:TextStyle(color:Colors.red))
+                  )              
+                ]
+              ),
+              Padding(padding: const EdgeInsets.only(top:10.0)),
+               Row(
+                children: <Widget>[
+                  Padding(padding: const EdgeInsets.only(left:30.0)),
+                  Text("Dim",style:TextStyle(
+                    fontSize:15,
+                    fontWeight: FontWeight.bold
+                  )),
+                ]
+              ), 
+               Padding(padding: const EdgeInsets.only(top:40.0)),
+               Row(
+                children: <Widget>[
+                  Padding(padding: const EdgeInsets.only(left:70.0)),
+                  Text("Tâches du jour",style:TextStyle(
+                    fontSize:25,
+                    fontWeight: FontWeight.bold,
+                    color:Colors.pink
+                  )),
+                ]
+              ), 
+               Padding(padding: const EdgeInsets.only(top:10.0)),
+               Row(
+                children: <Widget>[
+                  Padding(padding: const EdgeInsets.only(left:30.0)),
+                  Text("- Anniversaire à 18h",style:TextStyle(
+                    fontSize:15,
+                    fontWeight: FontWeight.bold
+                  )),
+                ]
+              ),       
             ],)
         ),
-      ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.pink,
         child: Icon(
@@ -109,97 +257,87 @@ class _HomeState extends State<Home>{
                 );
         }
 
-  pp() async{
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      return prefs.getString('test_image');
-      // Step 2: Loading image by using the path that we saved earlier. We can create a file using path 
-      //         and can use FileImage provider for loading image from file.
-      //  CircleAvatar(
-      //           backgroundImage: FileImage(File(prefs.getString('test_image')),            
-      //           ));
-      
-   }
 
-  Widget _decideImageWidget(){
-    if(imageFile==null){
-      return Text('photo');
-    }else{
-      return Image.file(imageFile,width: 100,height: 100);
-    }
-  }
+  // Widget _decideImageWidget(){
+  //   if(imageFile==null){
+  //     return Text('photo');
+  //   }else{
+  //     return Image.file(imageFile,width: 100,height: 100);
+  //   }
+  // }
 
-  _openGallerie(BuildContext context) async {
-    var image = await ImagePicker.pickImage(source: ImageSource.gallery);
-     this.setState((){
-          imageFile = image;
-    });
+  // _openGallerie(BuildContext context) async {
+  //   var image = await ImagePicker.pickImage(source: ImageSource.gallery);
+  //    this.setState((){
+  //         imageFile = image;
+  //   });
  
     
-    Navigator.of(context).pop();
-    final directory = await getApplicationDocumentsDirectory();
-    final path="assets/xml";
-    String xmlString =  await rootBundle.loadString('assets');
+  //   Navigator.of(context).pop();
+  //   final directory = await getApplicationDocumentsDirectory();
+  //   final path="assets/xml";
+  //   String xmlString =  await rootBundle.loadString('assets');
     
-    final fileName = basename(image.path);
+  //   final fileName = basename(image.path);
     
-    // final File localImage = await image.copy('$path/$fileName');
-    // SharedPreferences prefs = await SharedPreferences.getInstance();
-    // prefs.setString('test_image', localImage.path);
-    final img = pic.decodeImage(image.readAsBytesSync());
-    print('chemin: $xmlString');
+  //   // final File localImage = await image.copy('$path/$fileName');
+  //   // SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   // prefs.setString('test_image', localImage.path);
+  //   final img = pic.decodeImage(image.readAsBytesSync());
+  //   print('chemin: $xmlString');
     
-    //final thumbnail = pic.copyResize(img);
-    File('$path/$fileName')
-        ..writeAsBytesSync(pic.encodePng(img));
+  //   //final thumbnail = pic.copyResize(img);
+  //   File('$path/$fileName')
+  //       ..writeAsBytesSync(pic.encodePng(img));
    
-    //newImage = await image.copy('assets/');
+  //   //newImage = await image.copy('assets/');
     
-  }
+  // }
 
 
 
 
-   _openCamera(BuildContext context) async{
-    var image = await ImagePicker.pickImage(source: ImageSource.camera);
+  //  _openCamera(BuildContext context) async{
+  //   var image = await ImagePicker.pickImage(source: ImageSource.camera);
 
-    this.setState((){  
-      imageFile = image;
-    });
-    GallerySaver.saveImage(imageFile.path);
-    Navigator.of(context).pop();
+  //   this.setState((){  
+  //     imageFile = image;
+  //   });
+  //   GallerySaver.saveImage(imageFile.path);
+  //   Navigator.of(context).pop();
 
-    }  
+  //   }  
 
 
-  Future <void> _showDialog(BuildContext context) {
-    return showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: new Text("Photo"),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                GestureDetector( 
-                  child: Text('Gallerie'),
-                  onTap: (){
-                    _openGallerie(context);
-                  },
-                ),
-                Padding(padding: EdgeInsets.all(5.0)),
-                GestureDetector(
-                  child: Text('Camera'),
-                  onTap: (){
-                    _openCamera(context);
-                  },
-                )
-              ],
-            ),)
+  // Future <void> _showDialog(BuildContext context) {
+  //   return showDialog(
+  //     context: context,
+  //     builder: (BuildContext context) {
+  //       return AlertDialog(
+  //         title: new Text("Photo"),
+  //         content: SingleChildScrollView(
+  //           child: ListBody(
+  //             children: <Widget>[
+  //               GestureDetector( 
+  //                 child: Text('Gallerie'),
+  //                 onTap: (){
+  //                   _openGallerie(context);
+  //                 },
+  //               ),
+  //               Padding(padding: EdgeInsets.all(5.0)),
+  //               GestureDetector(
+  //                 child: Text('Camera'),
+  //                 onTap: (){
+  //                   _openCamera(context);
+  //                 },
+  //               )
+  //             ],
+  //           ),)
 
-        );
-      },
-    );
-  }
+  //       );
+  //     },
+  //   );
+  // }
 }
 
 

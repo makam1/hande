@@ -1,6 +1,7 @@
 
 import 'dart:convert';
 import 'package:Hande/widgets/UsersList.dart';
+import 'package:Hande/widgets/WeekEvent.dart';
 import 'package:Hande/widgets/profil.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:jaguar_jwt/jaguar_jwt.dart';
@@ -11,6 +12,9 @@ import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'package:Hande/widgets/home.dart';
 import 'package:Hande/widgets/register.dart';
+import 'dart:ui' as ui;
+import 'package:flutter/painting.dart';
+
 
 
 
@@ -46,7 +50,7 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin{
 
   String msg='';
   Future<List> _login() async {
-    final response= await http.post("https://8ca5739f.ngrok.io/api/login",headers:{
+    final response= await http.post("https://691fca87.ngrok.io/api/login",headers:{
       'Accept': 'application/json',
     }, body: {
       "username":username.text,
@@ -65,7 +69,7 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin{
       getToken();
 
       Navigator.push(context, MaterialPageRoute(builder: (context){
-            return UsersScreen();
+            return Register();
           }));
             }
     else{
@@ -90,16 +94,21 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin{
       body: new Stack(
         fit: StackFit.expand,
         children: <Widget>[
+          Container(
+        color: Colors.white,
+        child: CustomPaint(
+          painter: CurvePainter(),
+        )),
           new Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               
               //Home().createState().pp(),
-              // new Image(
-              //   image: new AssetImage("assets/calendar.png"),
-              //   height: _logoAnimation.value*99,
+              new Image(
+                image: new AssetImage("assets/calendar.png"),
+                height: _logoAnimation.value*99,
                 
-              // ),
+              ),
               new Form(
                 child: new Container(
                   padding: const EdgeInsets.only(left:50.0,right: 50.0),
@@ -152,15 +161,50 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin{
                     "Pas de compte? S'inscrire",
                     style: TextStyle(color:Colors.red),
                   ), 
-                  
                 )
-                  ])
+                 ])
               )
-            )],
+            ),],
           )],
        ),
     );
   }
+}
+class CurvePainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    
+    var gradient = RadialGradient(
+    center: const Alignment(0.7, -0.6), // near the top right
+    radius: 0.2,
+    colors: [
+      const Color(0xFFFFFF00), // yellow sun
+      const Color(0xFF0099FF), // blue sky
+    ],
+    stops: [0.4, 1.0],
+  );
+  // rect is the area we are painting over
+  var paint = Paint();
+    paint.color = Colors.orange[400];
+    paint.style = PaintingStyle.fill;
 
+    var path = Path();
+
+    path.moveTo(0, size.height * 0.9167);
+    path.quadraticBezierTo(size.width * 0.25, size.height * 0.875,
+        size.width * 0.5, size.height * 0.9167);
+    path.quadraticBezierTo(size.width * 0.75, size.height * 0.9584,
+        size.width * 1.0, size.height * 0.9167);
+    path.lineTo(size.width, size.height);
+    path.lineTo(0, size.height);
+
+
+    canvas.drawPath(path, paint);
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) {
+    return true;
+  }
 }
 

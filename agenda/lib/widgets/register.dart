@@ -126,9 +126,19 @@ class RegisterState extends State<Register> with SingleTickerProviderStateMixin{
 
    Widget _decideImageWidget(){
     if(imageFile==null){
-      return Text('photo');
+      return Container(
+        width: 120.0,
+                    height: 120.0,
+                    decoration: new BoxDecoration(
+                        shape: BoxShape.circle,
+                        image: new DecorationImage(
+                            fit: BoxFit.fill,
+                            image: new AssetImage("assets/calendar.png")
+                            )
+                        )
+      );
     }else{
-      return Image.file(imageFile,width: 60,height: 60);
+      return new CircleAvatar(backgroundImage: new FileImage(imageFile), radius: 75.0,);
     }
   }
 
@@ -139,25 +149,44 @@ class RegisterState extends State<Register> with SingleTickerProviderStateMixin{
       body: new Stack(
         fit: StackFit.expand,
         children: <Widget>[
+          Container(
+        color: Colors.white,
+        child: CustomPaint(
+          painter: CurvePainter(),
+        )),
           new Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              new Container(
-                    width: 190.0,
-                    height: 190.0,
-                    decoration: new BoxDecoration(
-                        shape: BoxShape.circle,
-                        image: new DecorationImage(
-                            fit: BoxFit.fill,
-                            image: new AssetImage("assets/calendar.png"))
-                        )
+              new Row(
+                    // width: 150.0,
+                    // height: 150.0,
+                    // decoration: new BoxDecoration(
+                    //     shape: BoxShape.circle,
+                    //     image: new DecorationImage(
+                    //         fit: BoxFit.fill,
+                    //         image: new AssetImage("assets/calendar.png")
+                    //         )
+                    //     )
+                    children: <Widget>[
+                      new Padding(
+                padding: const EdgeInsets.only(left:100.0),
+
+                ),
+                          _decideImageWidget(),
+                          new Padding(
+                padding: const EdgeInsets.only(top: 70.0),
+
+                ),
+                    IconButton (
+                    icon:new Icon(
+                      Icons.add_a_photo,
                     ),
-              //Home().createState().pp(),
-              // new Image(
-              //   image: new AssetImage("assets/calendar.png"),
-              //   height: _logoAnimation.value*99,  
-              // ),
-              
+                    onPressed: (()=> _imageDialog(context))
+                    
+                    ),
+                        
+                  ],
+                    ),
               new Form(
                 child: new Container(
                   padding: const EdgeInsets.only(left:50.0,right: 50.0),
@@ -179,7 +208,6 @@ class RegisterState extends State<Register> with SingleTickerProviderStateMixin{
                   keyboardType: TextInputType.text,
                   obscureText: true,
                 ),
-
                   new TextFormField(
                     controller: email,
                   decoration: new InputDecoration(
@@ -205,17 +233,18 @@ class RegisterState extends State<Register> with SingleTickerProviderStateMixin{
                   new Padding(
                 padding: const EdgeInsets.only(left:85.0,top: 10.0),
 
-                ),Row(
-                   mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: <Widget>[
-                          _decideImageWidget(),
-                          RaisedButton(onPressed: (){
-                          _imageDialog(context);
-                        },
-                        child:Text('Choisir image')
-                        )
-                  ],)
-               ,                  
+                ),
+                // Row(
+                //    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                //     children: <Widget>[
+                //           _decideImageWidget(),
+                //           RaisedButton(onPressed: (){
+                //           _imageDialog(context);
+                //         },
+                //         child:Text('Choisir image')
+                //         )
+                //   ],)
+                                 
                 new Padding(
                 padding: const EdgeInsets.only(left:85.0,top: 10.0),
 
@@ -344,6 +373,43 @@ class RegisterState extends State<Register> with SingleTickerProviderStateMixin{
       },
     );
   }
-
 }
+class CurvePainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    
+    var gradient = RadialGradient(
+    center: const Alignment(0.7, -0.6), // near the top right
+    radius: 0.2,
+    colors: [
+      const Color(0xFFFFFF00), // yellow sun
+      const Color(0xFF0099FF), // blue sky
+    ],
+    stops: [0.4, 1.0],
+  );
+  // rect is the area we are painting over
+  var paint = Paint();
+    paint.color = Colors.orange[400];
+    paint.style = PaintingStyle.fill;
+
+    var path = Path();
+
+    path.moveTo(0, size.height * 0.9167);
+    path.quadraticBezierTo(size.width * 0.25, size.height * 0.875,
+        size.width * 0.5, size.height * 0.9167);
+    path.quadraticBezierTo(size.width * 0.75, size.height * 0.9584,
+        size.width * 1.0, size.height * 0.9167);
+    path.lineTo(size.width, size.height);
+    path.lineTo(0, size.height);
+
+
+    canvas.drawPath(path, paint);
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) {
+    return true;
+  }
+}
+
 
