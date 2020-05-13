@@ -25,9 +25,46 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home>{
   File imageFile;
-  File newImage ;
+  File newImage ; 
 
- 
+ static getday(int j,int m,int a)  {
+    int day;
+    int codejour= j;
+    int codemois;
+    if(m==1 || m==10){
+      codemois=0;
+    }else if(m==2 || m==3 || m==11){
+      codemois=3;
+    }else if(m==4 || m==7){
+      codemois=6;
+    }else if(m==5){
+      codemois=1;
+    }else if(m==6){
+      codemois=4;
+    }else if(m==8){
+      codemois=2;
+    }else{
+      codemois=5;
+    } 
+    double bis=a/4;    
+    int biss=bis.toInt();
+    int codeannee=(a+biss);
+    int somme=codejour+codemois+codeannee+6;
+    day=somme%7;
+    print(day);
+    return day;
+  }
+
+String en='green';
+static Color col= Colors.green;
+int day=getday(12,3,20);
+
+// static int tes=0xff443a49;
+// static Color pickerColor = new Color(tes);
+String testingColorString = col.toString();
+Color newColor = new Color(col.value);
+
+String color=col.toString();
 
   @override
   void initState() {
@@ -134,8 +171,10 @@ class _HomeState extends State<Home>{
                 children: <Widget>[
                   Padding(padding: const EdgeInsets.only(left:300.0)),
                   Container(
-                    color: Colors.red,
-                    child: Text('-------',style:TextStyle(color:Colors.red))
+                    width: 30,
+                    height: 15,
+                    color: newColor
+                    //child: Text('-------',style:TextStyle(color:Colors.red))
                   )              
                 ]
               ),
@@ -234,7 +273,7 @@ class _HomeState extends State<Home>{
                Row(
                 children: <Widget>[
                   Padding(padding: const EdgeInsets.only(left:30.0)),
-                  Text("- Anniversaire à 18h",style:TextStyle(
+                  Text("$day",style:TextStyle(
                     fontSize:15,
                     fontWeight: FontWeight.bold
                   )),

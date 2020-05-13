@@ -50,7 +50,7 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin{
 
   String msg='';
   Future<List> _login() async {
-    final response= await http.post("https://691fca87.ngrok.io/api/login",headers:{
+    final response= await http.post("https://5686c1d8.ngrok.io/api/login",headers:{
       'Accept': 'application/json',
     }, body: {
       "username":username.text,
@@ -67,9 +67,11 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin{
       print(decoded);
       setToken(token);
       getToken();
+      int test=11%7;
+      print(test);
 
       Navigator.push(context, MaterialPageRoute(builder: (context){
-            return Register();
+            return EventScreen();
           }));
             }
     else{
