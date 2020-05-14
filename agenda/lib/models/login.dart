@@ -2,6 +2,7 @@
 import 'dart:convert';
 import 'package:Hande/widgets/UsersList.dart';
 import 'package:Hande/widgets/WeekEvent.dart';
+import 'package:Hande/widgets/ajoutMembre.dart';
 import 'package:Hande/widgets/profil.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:jaguar_jwt/jaguar_jwt.dart';
@@ -50,7 +51,7 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin{
 
   String msg='';
   Future<List> _login() async {
-    final response= await http.post("https://5686c1d8.ngrok.io/api/login",headers:{
+    final response= await http.post("https://54ae3fdc.ngrok.io/api/login",headers:{
       'Accept': 'application/json',
     }, body: {
       "username":username.text,
@@ -71,7 +72,7 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin{
       print(test);
 
       Navigator.push(context, MaterialPageRoute(builder: (context){
-            return EventScreen();
+            return AjoutMembre();
           }));
             }
     else{

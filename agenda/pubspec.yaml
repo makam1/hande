@@ -33,10 +33,7 @@ dependencies:
   gallery_saver: ^1.0.7
   image_picker: ^0.6.3+4
   path_provider: ^1.6.5
-  
-  
-
-  
+  dropdown_formfield: ^0.1.2
 
 
 dev_dependencies:
