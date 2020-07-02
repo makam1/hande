@@ -1,19 +1,14 @@
 
 import 'dart:convert';
-import 'package:Hande/widgets/UsersList.dart';
 import 'package:Hande/widgets/WeekEvent.dart';
+import 'package:Hande/widgets/ajoutEvenement.dart';
 import 'package:Hande/widgets/ajoutMembre.dart';
-import 'package:Hande/widgets/profil.dart';
+import 'package:Hande/widgets/listeEnfants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:jaguar_jwt/jaguar_jwt.dart';
-
 import 'package:flutter/material.dart';
-//import 'package:english_words/english_words.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
-import 'package:Hande/widgets/home.dart';
-import 'package:Hande/widgets/register.dart';
-import 'dart:ui' as ui;
 import 'package:flutter/painting.dart';
 
 
@@ -51,7 +46,7 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin{
 
   String msg='';
   Future<List> _login() async {
-    final response= await http.post("https://54ae3fdc.ngrok.io/api/login",headers:{
+    final response= await http.post("https://1b561e214a05.ngrok.io/api/login",headers:{
       'Accept': 'application/json',
     }, body: {
       "username":username.text,
@@ -72,7 +67,7 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin{
       print(test);
 
       Navigator.push(context, MaterialPageRoute(builder: (context){
-            return AjoutMembre();
+            return ListeEnfantsScreen();
           }));
             }
     else{

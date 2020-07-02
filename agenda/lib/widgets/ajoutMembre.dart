@@ -1,14 +1,10 @@
 
 import 'dart:io';
-import 'package:Hande/widgets/UsersList.dart';
-import 'package:Hande/widgets/ajoutEnfant.dart';
+
 import 'package:Hande/widgets/home.dart';
-import 'package:async/async.dart';
 import 'package:flutter/services.dart';
-import 'package:path/path.dart' as path;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-//import 'package:english_words/english_words.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'package:date_format/date_format.dart';
@@ -17,11 +13,9 @@ import 'package:Hande/models/login.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:gallery_saver/gallery_saver.dart';
-import 'package:image/image.dart' as pic;
 import 'package:http_parser/http_parser.dart';
-import 'dart:convert';
 import 'package:dropdown_formfield/dropdown_formfield.dart';
-
+import 'package:flutter_hsvcolor_picker/flutter_hsvcolor_picker.dart';
 
 
 class AjoutMembre extends StatefulWidget{
@@ -38,8 +32,6 @@ class AjoutMembreState extends State<AjoutMembre> with SingleTickerProviderState
 
   }
 
-  
-
   TextEditingController username = new TextEditingController();
   TextEditingController password= new TextEditingController();
   TextEditingController nom= new TextEditingController();
@@ -49,7 +41,8 @@ class AjoutMembreState extends State<AjoutMembre> with SingleTickerProviderState
   TextEditingController telephone= new TextEditingController();
   TextEditingController etablissement= new TextEditingController();
   TextEditingController niveauscolaire= new TextEditingController();
-  String role;  
+  String role;
+  String color;  
 
   Future<List> ajout() async {
     String token = await LoginState().getToken();
@@ -60,7 +53,7 @@ class AjoutMembreState extends State<AjoutMembre> with SingleTickerProviderState
 
     Map<String, String> headers = { "Authorization": "Bearer $newStr",};
 
-    var uri = Uri.parse("https://54ae3fdc.ngrok.io/api/ajout");
+    var uri = Uri.parse("https://d0aac673.ngrok.io/api/ajout");
       var request = new http.MultipartRequest("POST", uri);
         request.headers.addAll(headers);
         if(imageFile==null){
@@ -81,8 +74,6 @@ class AjoutMembreState extends State<AjoutMembre> with SingleTickerProviderState
       request.files.add(multipartFile);
 
         }
-    
-
 
     request.fields['username'] = username.text;
     request.fields['password'] = password.text;
@@ -91,7 +82,7 @@ class AjoutMembreState extends State<AjoutMembre> with SingleTickerProviderState
     request.fields['datenaissance'] = formatDate(choix, [yyyy, '-', mm, '-', dd]);
     request.fields['etablissement'] = etablissement.text;
     request.fields['niveauscolaire'] = niveauscolaire.text;
-
+    request.fields['couleur'] = color;
 
 
     var response = await request.send();
@@ -114,10 +105,9 @@ Future<File> getImageFileFromAssets(String path) async {
 
   return file;
 }
- double age;
+  double age;
   File i;
   File imageFile;
-
   DateTime choix=new DateTime.now();
 
    Widget _decideImageWidget(){
@@ -409,14 +399,14 @@ Future<File> getImageFileFromAssets(String path) async {
                   ),
                    keyboardType: TextInputType.text,
                   ),
-                new MaterialButton(
+                  new MaterialButton(
                   color: Colors.grey,
                   textColor: Colors.black,
                   child: new Text(
-                    "Envoyer",
+                    "suivant",
                   ),
                   onPressed:()  {
-                   ajout();
+                   _colorPicker(context);
                   },
                   splashColor: Colors.black,
                   
@@ -433,6 +423,33 @@ Future<File> getImageFileFromAssets(String path) async {
       },
     );
   }
+  Future <void> _colorPicker(BuildContext context) {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: new Text("Renseigner les champs suivants"),
+          content: SingleChildScrollView(
+             child: Column(
+            children: <Widget>[
+                  new ColorPicker(
+                    color: Colors.blue,
+                    onChanged: (value){color=value.toString(); }
+                  ),
+                  new MaterialButton(
+                  color: Colors.white,
+                  textColor: Colors.black,
+                  child: new Text(
+                    "Envoyer",
+                  ),
+                  onPressed:()  {
+                   ajout();
+                  },
+                  splashColor: Colors.black,
+                
+        )])));
+        }
+        );}
 }
 
 

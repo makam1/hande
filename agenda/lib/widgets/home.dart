@@ -27,37 +27,9 @@ class _HomeState extends State<Home>{
   File imageFile;
   File newImage ; 
 
- static getday(int j,int m,int a)  {
-    int day;
-    int codejour= j;
-    int codemois;
-    if(m==1 || m==10){
-      codemois=0;
-    }else if(m==2 || m==3 || m==11){
-      codemois=3;
-    }else if(m==4 || m==7){
-      codemois=6;
-    }else if(m==5){
-      codemois=1;
-    }else if(m==6){
-      codemois=4;
-    }else if(m==8){
-      codemois=2;
-    }else{
-      codemois=5;
-    } 
-    double bis=a/4;    
-    int biss=bis.toInt();
-    int codeannee=(a+biss);
-    int somme=codejour+codemois+codeannee+6;
-    day=somme%7;
-    print(day);
-    return day;
-  }
 
 String en='green';
 static Color col= Colors.green;
-int day=getday(12,3,20);
 
 // static int tes=0xff443a49;
 // static Color pickerColor = new Color(tes);
@@ -273,7 +245,7 @@ String color=col.toString();
                Row(
                 children: <Widget>[
                   Padding(padding: const EdgeInsets.only(left:30.0)),
-                  Text("$day",style:TextStyle(
+                  Text("Exemple",style:TextStyle(
                     fontSize:15,
                     fontWeight: FontWeight.bold
                   )),
@@ -297,86 +269,7 @@ String color=col.toString();
         }
 
 
-  // Widget _decideImageWidget(){
-  //   if(imageFile==null){
-  //     return Text('photo');
-  //   }else{
-  //     return Image.file(imageFile,width: 100,height: 100);
-  //   }
-  // }
-
-  // _openGallerie(BuildContext context) async {
-  //   var image = await ImagePicker.pickImage(source: ImageSource.gallery);
-  //    this.setState((){
-  //         imageFile = image;
-  //   });
  
-    
-  //   Navigator.of(context).pop();
-  //   final directory = await getApplicationDocumentsDirectory();
-  //   final path="assets/xml";
-  //   String xmlString =  await rootBundle.loadString('assets');
-    
-  //   final fileName = basename(image.path);
-    
-  //   // final File localImage = await image.copy('$path/$fileName');
-  //   // SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   // prefs.setString('test_image', localImage.path);
-  //   final img = pic.decodeImage(image.readAsBytesSync());
-  //   print('chemin: $xmlString');
-    
-  //   //final thumbnail = pic.copyResize(img);
-  //   File('$path/$fileName')
-  //       ..writeAsBytesSync(pic.encodePng(img));
-   
-  //   //newImage = await image.copy('assets/');
-    
-  // }
-
-
-
-
-  //  _openCamera(BuildContext context) async{
-  //   var image = await ImagePicker.pickImage(source: ImageSource.camera);
-
-  //   this.setState((){  
-  //     imageFile = image;
-  //   });
-  //   GallerySaver.saveImage(imageFile.path);
-  //   Navigator.of(context).pop();
-
-  //   }  
-
-
-  // Future <void> _showDialog(BuildContext context) {
-  //   return showDialog(
-  //     context: context,
-  //     builder: (BuildContext context) {
-  //       return AlertDialog(
-  //         title: new Text("Photo"),
-  //         content: SingleChildScrollView(
-  //           child: ListBody(
-  //             children: <Widget>[
-  //               GestureDetector( 
-  //                 child: Text('Gallerie'),
-  //                 onTap: (){
-  //                   _openGallerie(context);
-  //                 },
-  //               ),
-  //               Padding(padding: EdgeInsets.all(5.0)),
-  //               GestureDetector(
-  //                 child: Text('Camera'),
-  //                 onTap: (){
-  //                   _openCamera(context);
-  //                 },
-  //               )
-  //             ],
-  //           ),)
-
-  //       );
-  //     },
-  //   );
-  // }
 }
 
 

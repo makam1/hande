@@ -70,11 +70,8 @@ final List users;
 
 class UsersScreen extends StatefulWidget{
   @override  State createState()=>new UsersScreenState();
-  
 }
-
 class UsersScreenState extends State<UsersScreen> {
-  
   Future<List> getData() async{
     String token = await LoginState().getToken();
     String newStr = token.substring(1, token.length-1);
@@ -85,8 +82,6 @@ class UsersScreenState extends State<UsersScreen> {
       print(json.decode(response.body));
     return json.decode(response.body); 
   }
-
-
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
