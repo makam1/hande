@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:Hande/models/login.dart';
+import 'package:Hande/widgets/ajoutEvenement.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -88,13 +89,13 @@ class EventList extends StatelessWidget{
         children: <Widget>[
           Row(
             children: <Widget>[
-                  Padding(padding: const EdgeInsets.only(left:100.0)),
+                  Padding(padding: const EdgeInsets.only(left:100.0,top:80.0)),
                   Text('Matin',style:TextStyle(
                     fontSize:10)),
-                  Padding(padding: const EdgeInsets.only(left:50.0)),
+                  Padding(padding: const EdgeInsets.only(left:50.0,top:80.0)),
                   Text('Après-midi',style:TextStyle(
                     fontSize:10)),
-                  Padding(padding: const EdgeInsets.only(left:50.0)),
+                  Padding(padding: const EdgeInsets.only(left:50.0,top:80.0)),
                   Text('Soir',style:TextStyle(
                     fontSize:10)),                 
                 ]
@@ -141,7 +142,7 @@ class EventScreenState extends State<EventScreen> {
   Future<List> getEvents() async{
     String token = await LoginState().getToken();
     String newStr = token.substring(1, token.length-1);
-    final response= await http.get('https://70bfed69.ngrok.io/api/evenement/events',headers:{
+    final response= await http.get('https://08e727baf2f9.ngrok.io/api/evenement/events',headers:{
        'Accept': 'application/json',
        'Authorization': 'Bearer $newStr',   
        });
@@ -155,6 +156,44 @@ class EventScreenState extends State<EventScreen> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
+      appBar: new AppBar(
+      title:new  Text(
+        'HANDE',
+        style: TextStyle(fontSize: 15.0,fontStyle:FontStyle.italic,),
+        ),
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: <Color>[
+              Colors.red[500],
+              Colors.yellow[400],
+            ]))),         
+      actions: <Widget>[
+        Padding(
+          padding: EdgeInsets.only(right: 20.0),
+      child: GestureDetector(
+        onTap: () {},
+        child: Icon(
+          Icons.search,
+          size: 26.0,
+        ),
+      )
+    ),
+     
+    Padding(
+      padding: EdgeInsets.only(right: 20.0),
+      child: GestureDetector(
+        onTap: () {},
+        child: Icon(
+            Icons.more_vert
+        ),
+            )
+          ),
+        ],
+      
+      ),
       body: new FutureBuilder<List>(
         future: getEvents(),
         builder: (context, snapshot){
@@ -165,7 +204,18 @@ class EventScreenState extends State<EventScreen> {
           EventList(events:snapshot.data):
           Center(child: CircularProgressIndicator());
         }, 
-      ) 
+      ) ,floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.pink,
+        child: Icon(
+          Icons.add,
+          size: 26.0,
+        ),
+        onPressed: (){
+          Navigator.push(context, MaterialPageRoute(builder: (context){
+            return AjoutEvenement();
+          }));
+        },
+      ),
       );
     }
 

@@ -75,7 +75,7 @@ class UsersScreenState extends State<UsersScreen> {
   Future<List> getData() async{
     String token = await LoginState().getToken();
     String newStr = token.substring(1, token.length-1);
-    final response= await http.get('https://8ca5739f.ngrok.io/api/users',headers:{
+    final response= await http.get('https://a6038d7ea20e.ngrok.io/api/users',headers:{
        'Accept': 'application/json',
        'Authorization': 'Bearer $newStr',   
        });

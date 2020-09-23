@@ -7,7 +7,7 @@ class MyApp extends StatelessWidget{
     return new MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Hande',
-      home:new Home(title:'Hande'),
+      home:new Login(title:'Hande'),
       theme:new  ThemeData(
         primaryColor: Colors.pink[100]
       )

@@ -4,12 +4,14 @@ import 'package:Hande/widgets/WeekEvent.dart';
 import 'package:Hande/widgets/ajoutEvenement.dart';
 import 'package:Hande/widgets/ajoutMembre.dart';
 import 'package:Hande/widgets/listeEnfants.dart';
+import 'package:Hande/widgets/register.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:jaguar_jwt/jaguar_jwt.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'package:flutter/painting.dart';
+
 
 
 
@@ -24,6 +26,7 @@ class Login extends StatefulWidget{
 class LoginState extends State<Login> with SingleTickerProviderStateMixin{
   AnimationController _logoAnimationController;
   Animation<double>   _logoAnimation;
+
 
   @override
   void initState(){
@@ -42,11 +45,16 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin{
   TextEditingController username = new TextEditingController();
   TextEditingController password= new TextEditingController();
 
-  var token;
+  var token='';
 
   String msg='';
   Future<List> _login() async {
-    final response= await http.post("https://1b561e214a05.ngrok.io/api/login",headers:{
+    if(token!=''){
+      Navigator.push(context, MaterialPageRoute(builder: (context){
+            return Register();
+          }));
+    }
+    final response= await http.post("https://a6038d7ea20e.ngrok.io/api/login",headers:{
       'Accept': 'application/json',
     }, body: {
       "username":username.text,
@@ -86,7 +94,7 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin{
 
   @override
   Widget build(BuildContext context){
-    
+   
     return new Scaffold(
       backgroundColor: Colors.white,
       body: new Stack(
@@ -155,10 +163,15 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin{
 
                   new Container(
                   padding: const EdgeInsets.only(top:10.0),
-                  child: new Text(
-                    "Pas de compte? S'inscrire",
-                    style: TextStyle(color:Colors.red),
-                  ), 
+                  child: InkWell(
+                    child: new Text(
+                                    "Pas de compte? S'inscrire",
+                                    style: TextStyle(color:Colors.red),
+                                  ),
+                    onTap: () {Navigator.push(context, MaterialPageRoute(builder: (context){
+                        return Register();
+                      }));},
+                )
                 )
                  ])
               )

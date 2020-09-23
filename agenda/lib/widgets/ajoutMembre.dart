@@ -9,7 +9,7 @@ import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'package:date_format/date_format.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
-import 'package:Hande/models/login.dart';
+import 'package:Hande/widgets/home.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:gallery_saver/gallery_saver.dart';
@@ -92,7 +92,7 @@ class AjoutMembreState extends State<AjoutMembre> with SingleTickerProviderState
       print(response);
     }
     Navigator.push(context, MaterialPageRoute(builder: (context){
-                    return Home();
+                    return Login();
                     }));
     print(respStr);
 

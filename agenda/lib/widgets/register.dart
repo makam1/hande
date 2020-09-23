@@ -11,7 +11,7 @@ import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'package:date_format/date_format.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
-import 'package:Hande/models/login.dart';
+import 'package:Hande/widgets/home.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:gallery_saver/gallery_saver.dart';
@@ -263,10 +263,15 @@ class RegisterState extends State<Register> with SingleTickerProviderStateMixin{
 
                   new Container(
                   padding: const EdgeInsets.only(top:10.0),
-                  child: new Text(
+                  child: InkWell(
+                    child: new Text(
                     "Un compte? Se connecter",
                     style: TextStyle(color:Colors.red),
-                  ), 
+                  ),
+                    onTap: () {Navigator.push(context, MaterialPageRoute(builder: (context){
+                        return Login();
+                      }));},
+                )
                 )
                   ])
               )

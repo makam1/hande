@@ -1,275 +1,221 @@
-import 'dart:io';
 
-
-import 'package:flutter/services.dart';
-import 'package:image/image.dart' as pic;
-import 'package:flutter/material.dart';
-import 'dart:async';
-import 'package:Hande/models/login.dart';
-import 'package:date_format/date_format.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:gallery_saver/gallery_saver.dart';
+import 'dart:convert';
+import 'package:Hande/widgets/WeekEvent.dart';
+import 'package:Hande/widgets/ajoutEvenement.dart';
+import 'package:Hande/widgets/ajoutMembre.dart';
+import 'package:Hande/widgets/listeEnfants.dart';
 import 'package:Hande/widgets/UsersList.dart';
+import 'package:Hande/widgets/register.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:path/path.dart' ;
+import 'package:jaguar_jwt/jaguar_jwt.dart';
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:async';
+import 'package:flutter/painting.dart';
 
 
-class Home extends StatefulWidget {
-  Home({Key key, this.title}): super(key:key);
+
+
+
+
+class Login extends StatefulWidget{
+   Login({Key key, this.title}): super(key:key);
   final String title;
 
   @override
-  _HomeState createState()=> new _HomeState();
+  State createState()=> new LoginState();
+
 }
 
-class _HomeState extends State<Home>{
-  File imageFile;
-  File newImage ; 
+class LoginState extends State<Login> with SingleTickerProviderStateMixin{
+  AnimationController _logoAnimationController;
+  Animation<double>   _logoAnimation;
 
-
-String en='green';
-static Color col= Colors.green;
-
-// static int tes=0xff443a49;
-// static Color pickerColor = new Color(tes);
-String testingColorString = col.toString();
-Color newColor = new Color(col.value);
-
-String color=col.toString();
 
   @override
-  void initState() {
-    WidgetsFlutterBinding.ensureInitialized();
-    // TODO: implement initState
+  void initState(){
     super.initState();
+    _logoAnimationController= new AnimationController(
+      vsync: this,
+      duration: new Duration(milliseconds:2000)
+      );
+    _logoAnimation= new CurvedAnimation(
+      parent: _logoAnimationController,
+      curve: Curves.bounceIn);
+    _logoAnimation.addListener(()=>this.setState((){}));
+    _logoAnimationController.forward();
   }
-  static DateTime date= new DateTime.now();
-  String today =formatDate(new DateTime.now(), [dd, ' ',M, ' ', yyyy]);
-  
+
+  TextEditingController username = new TextEditingController();
+  TextEditingController password= new TextEditingController();
+
+  var token='';
+
+  String msg='';
+  Future<List> _login() async {
+    final response= await http.post("https://08e727baf2f9.ngrok.io/api/login",headers:{
+      'Accept': 'application/json',
+    }, body: {
+      "username":username.text,
+      "password":password.text,
+    });
+    if(response.statusCode==200){
+      var datauser= json.decode(response.body);
+      token=datauser.values.toString();
+      String decoded;
+      print(token);
+      final parts = token.split('.');
+      final payload = parts[1];
+      decoded = B64urlEncRfc7515.decodeUtf8(payload);
+      print(decoded);
+      setToken(token);
+      getToken();
+      int test=11%7;
+      print(test);
+
+      Navigator.push(context, MaterialPageRoute(builder: (context){
+            return EventScreen();
+          }));
+            }
+    else{
+      print("erreur :${response.body}");
+    }
+  }
+  Future<bool> setToken(String value) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.setString('token', value);
+  }
+
+  Future<String> getToken() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString('token');
+  }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context){
+   
     return new Scaffold(
-     appBar: new AppBar(
-      title:new  Text(
-        'HANDE',
-        style: TextStyle(fontSize: 15.0,fontStyle:FontStyle.italic,),
-        ),
-        flexibleSpace: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: <Color>[
-              Colors.red[500],
-              Colors.yellow[400],
-            ]))),         
-      actions: <Widget>[
-        Padding(
-          padding: EdgeInsets.only(right: 20.0),
-      child: GestureDetector(
-        onTap: () {},
-        child: Icon(
-          Icons.search,
-          size: 26.0,
-        ),
-      )
-    ),
-     
-    Padding(
-      padding: EdgeInsets.only(right: 20.0),
-      child: GestureDetector(
-        onTap: () {},
-        child: Icon(
-            Icons.more_vert
-        ),
-            )
-          ),
-        ],
       
-      ),  
-      body:Container(
-          child:Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+      backgroundColor: Colors.white,
+      body: new Stack(
+        fit: StackFit.expand,
+        children: <Widget>[
+          Container(
+        color: Colors.white,
+        child: CustomPaint(
+          painter: CurvePainter(),
+        )),
+          new Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Padding(padding: const EdgeInsets.only(top:20.0)),
-              Row(
-                children: <Widget>[
-                  Padding(padding: const EdgeInsets.only(left:30.0)),
-                  Text("Lun",style:TextStyle(
-                    fontSize:15,
-                    fontWeight: FontWeight.bold
-                  )),
-                  Padding(padding: const EdgeInsets.only(left:50.0)),
-                  Text('Matin',style:TextStyle(
-                    fontSize:10)),
-                  Padding(padding: const EdgeInsets.only(left:50.0)),
-                  Text('Après-midi',style:TextStyle(
-                    fontSize:10)),
-                  Padding(padding: const EdgeInsets.only(left:50.0)),
-                  Text('Soir',style:TextStyle(
-                    fontSize:10)),                 
-                ]
+              
+              //Home().createState().pp(),
+              new Image(
+                image: new AssetImage("assets/calendar.png"),
+                height: _logoAnimation.value*99,
+                
               ),
-              Row(
-                children: <Widget>[
-                  Padding(padding: const EdgeInsets.only(left:100.0)),
-                  Container(
-                    color: Colors.pink,
-                    child: Text('-------',style:TextStyle(color:Colors.pink))
-                  )              
-                ]
-              ),
-              Row(
-                children: <Widget>[
-                  Padding(padding: const EdgeInsets.only(left:100.0)),
-                  Container(
-                    color: Colors.yellow,
-                    child: Text('-------',style:TextStyle(color:Colors.yellow))
-                  )               
-                ]
-              ),
-               Row(
-                children: <Widget>[
-                  Padding(padding: const EdgeInsets.only(left:30.0)),
-                  Text("Mar",style:TextStyle(
-                    fontSize:15,
-                    fontWeight: FontWeight.bold
-                  )),   
-                ]
-              ),
-              Row(
-                children: <Widget>[
-                  Padding(padding: const EdgeInsets.only(left:300.0)),
-                  Container(
-                    width: 30,
-                    height: 15,
-                    color: newColor
-                    //child: Text('-------',style:TextStyle(color:Colors.red))
-                  )              
-                ]
-              ),
-              Padding(padding: const EdgeInsets.only(top:10.0)),
-               Row(
-                children: <Widget>[
-                  Padding(padding: const EdgeInsets.only(left:30.0)),
-                  Text("Mer",style:TextStyle(
-                    fontSize:15,
-                    fontWeight: FontWeight.bold
-                  )),
-                  
-                ]
-              ),
-              Padding(padding: const EdgeInsets.only(top:40.0)),
-               Row(
-                children: <Widget>[
-                  Padding(padding: const EdgeInsets.only(left:30.0)),
-                  Text("Jeu",style:TextStyle(
-                    fontSize:15,
-                    fontWeight: FontWeight.bold
-                  )),
-                  
-                ]
-              ),
-              Row(
-                children: <Widget>[
-                  Padding(padding: const EdgeInsets.only(left:200.0)),
-                  Container(
-                    color: Colors.pink,
-                    child: Text('-------',style:TextStyle(color:Colors.pink))
-                  )              
-                ]
-              ),
-               Padding(padding: const EdgeInsets.only(top:10.0)),
-               Row(
-                children: <Widget>[
-                  Padding(padding: const EdgeInsets.only(left:30.0)),
-                  Text("Ven",style:TextStyle(
-                    fontSize:15,
-                    fontWeight: FontWeight.bold
-                  )), 
-                ]
-              ),
-              Row(
-                children: <Widget>[
-                  Padding(padding: const EdgeInsets.only(left:100.0)),
-                  Container(
-                    color: Colors.yellow,
-                    child: Text('-------',style:TextStyle(color:Colors.yellow))
-                  )              
-                ]
-              ),
-              Padding(padding: const EdgeInsets.only(top:10.0)),
-               Row(
-                children: <Widget>[
-                  Padding(padding: const EdgeInsets.only(left:30.0)),
-                  Text("Sam",style:TextStyle(
-                    fontSize:15,
-                    fontWeight: FontWeight.bold
-                  )),
-                  
-                ]
-              ),
-              Row(
-                children: <Widget>[
-                  Padding(padding: const EdgeInsets.only(left:200.0)),
-                  Container(
-                    color: Colors.red,
-                    child: Text('-------',style:TextStyle(color:Colors.red))
-                  )              
-                ]
-              ),
-              Padding(padding: const EdgeInsets.only(top:10.0)),
-               Row(
-                children: <Widget>[
-                  Padding(padding: const EdgeInsets.only(left:30.0)),
-                  Text("Dim",style:TextStyle(
-                    fontSize:15,
-                    fontWeight: FontWeight.bold
-                  )),
-                ]
-              ), 
-               Padding(padding: const EdgeInsets.only(top:40.0)),
-               Row(
-                children: <Widget>[
-                  Padding(padding: const EdgeInsets.only(left:70.0)),
-                  Text("Tâches du jour",style:TextStyle(
-                    fontSize:25,
-                    fontWeight: FontWeight.bold,
-                    color:Colors.pink
-                  )),
-                ]
-              ), 
-               Padding(padding: const EdgeInsets.only(top:10.0)),
-               Row(
-                children: <Widget>[
-                  Padding(padding: const EdgeInsets.only(left:30.0)),
-                  Text("Exemple",style:TextStyle(
-                    fontSize:15,
-                    fontWeight: FontWeight.bold
-                  )),
-                ]
-              ),       
-            ],)
-        ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.pink,
-        child: Icon(
-          Icons.add,
-          size: 26.0,
-        ),
-        onPressed: (){
-          Navigator.push(context, MaterialPageRoute(builder: (context){
-            return Login();
-          }));
-        },
-      ),
-                );
-        }
+              new Form(
+                child: new Container(
+                  padding: const EdgeInsets.only(left:50.0,right: 50.0),
+                  child: new Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children:<Widget> [
+                  new TextFormField(
+                    controller: username,
+                  decoration: new InputDecoration(
+                    labelText:"nom d'utilisateur", 
+                  ),
+                  keyboardType: TextInputType.text,
+                  ),
+                  new TextFormField(
+                    controller: password,
+                  decoration: new InputDecoration(
+                    labelText:"mot de passe", 
+                  ),
+                  keyboardType: TextInputType.text,
+                  obscureText: true,
+                ),
+                new Container(
+                  padding: const EdgeInsets.only(left:80.0,top: 10.0),
+                  child: new Text(
+                    "Mot de passe oublié?",
+                    style: TextStyle(color:Colors.red),
 
+                  ),  
+                ),
+                new Padding(
+                padding: const EdgeInsets.only(left:85.0,top: 10.0),
 
- 
+                ),
+                new MaterialButton(
+                  color: Colors.grey,
+                  textColor: Colors.black,
+                  child: new Text(
+                    "Connexion",
+                  ),
+                  onPressed:()  {
+                   _login();
+                  },
+                  splashColor: Colors.black,
+                  ),
+                  Text(msg),
+
+                  new Container(
+                  padding: const EdgeInsets.only(top:10.0),
+                  child: InkWell(
+                    child: new Text(
+                                    "Pas de compte? S'inscrire",
+                                    style: TextStyle(color:Colors.red),
+                                  ),
+                    onTap: () {Navigator.push(context, MaterialPageRoute(builder: (context){
+                        return Register();
+                      }));},
+                )
+                )
+                 ])
+              )
+            ),],
+          )],
+       ),
+    );
+  }
 }
+class CurvePainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    
+    var gradient = RadialGradient(
+    center: const Alignment(0.7, -0.6), // near the top right
+    radius: 0.2,
+    colors: [
+      const Color(0xFFFFFF00), // yellow sun
+      const Color(0xFF0099FF), // blue sky
+    ],
+    stops: [0.4, 1.0],
+  );
+  // rect is the area we are painting over
+  var paint = Paint();
+    paint.color = Colors.orange[400];
+    paint.style = PaintingStyle.fill;
 
+    var path = Path();
+
+    path.moveTo(0, size.height * 0.9167);
+    path.quadraticBezierTo(size.width * 0.25, size.height * 0.875,
+        size.width * 0.5, size.height * 0.9167);
+    path.quadraticBezierTo(size.width * 0.75, size.height * 0.9584,
+        size.width * 1.0, size.height * 0.9167);
+    path.lineTo(size.width, size.height);
+    path.lineTo(0, size.height);
+
+
+    canvas.drawPath(path, paint);
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) {
+    return true;
+  }
+}
 

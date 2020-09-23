@@ -30,22 +30,22 @@ class ListeEnfants extends StatelessWidget{
                   child: new Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children:<Widget> [
-                    TextField(),
-                    TextField(),
                   DropdownButton(items: children.map((item) {
+                    prenom =item['username'];
                             return new DropdownMenuItem(
+                              
                               child: new Text(item['username']==null?'':item['username']),
-                              value: item['id'].toString(),
+                              value: item['id'].toString()    
                             );
                           }).toList(),
-                          onChanged: (newVal) {
-                            onTap: (){
+                          onChanged: (newVal){
                             enfant = newVal;
-                            
                             (context as Element).markNeedsBuild();
                             print(enfant);
-                        };
-                          },
+                            enfantId();
+                            hint: Text(prenom);
+                          }, 
+                          hint: Text('Enfant'),
                           value: enfant,
                         ),
                   ]),
@@ -70,7 +70,7 @@ class ListeEnfantsScreenState extends State<ListeEnfantsScreen> {
  Future<List> getChildren() async{
     String token = await LoginState().getToken();
     String newStr = token.substring(1, token.length-1);
-    final response= await http.get('https://1b561e214a05.ngrok.io/api/evenement/liste/enfants',headers:{
+    final response= await http.get('https://08e727baf2f9.ngrok.io/api/evenement/liste/enfants',headers:{
        'Accept': 'application/json',
        'Authorization': 'Bearer $newStr',   
        });
