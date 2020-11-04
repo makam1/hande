@@ -1,5 +1,6 @@
 
 import 'dart:io';
+import 'package:Hande/models/login.dart';
 import 'package:Hande/widgets/UsersList.dart';
 import 'package:Hande/widgets/home.dart';
 import 'package:async/async.dart';
@@ -65,28 +66,10 @@ class RegisterState extends State<Register> with SingleTickerProviderStateMixin{
 
     int id= await UsersList().getId();
 
-    print(token);
-    print(id);
-    // final response= await http.post(Uri.encodeFull("https://5408c3df.ngrok.io/api/ajout"),headers:{
-    //   'Accept': 'application/json',
-    //   'Authorization': 'Bearer $newStr',
-
-    // }, body: {
-    //   "username":username.text,
-    //   "password":password.text,
-    //   "email":email.text,
-    //   "datenaissance":formatDate(choix, [yyyy, '-', mm, '-', dd]),
-    //   "imageFile":base64Encode(imageFile.readAsBytesSync())
-
-    // });
-    
-        // print(response.body); 
-        // print('encode    '+base64Encode(imageFile.readAsBytesSync())); 
-
     Map<String, String> headers = { "Authorization": "Bearer $newStr",};
 
     // string to uri
-    var uri = Uri.parse("https://8ca5739f.ngrok.io/api/evenement/$id/image");
+    var uri = Uri.parse("https://5b7a400119b2.ngrok.io/inscription");
 
     // new multipart request
     var request = new http.MultipartRequest("POST", uri);
@@ -100,12 +83,12 @@ class RegisterState extends State<Register> with SingleTickerProviderStateMixin{
 
 
     // if you want more data in the request
-    // request.fields['username'] = username.text;
-    // request.fields['password'] = password.text;
-    // request.fields['role'] = 'ROLE_ENFANT';
-    // request.fields['email'] = email.text;
-    // request.fields['datenaissance'] = formatDate(choix, [yyyy, '-', mm, '-', dd]);
-    // add multipart form to request
+    request.fields['username'] = username.text;
+    request.fields['password'] = password.text;
+    request.fields['role'] = 'ROLE_PARENT';
+    request.fields['email'] = email.text;
+    request.fields['datenaissance'] = formatDate(choix, [yyyy, '-', mm, '-', dd]);
+    //add multipart form to request
     request.files.add(multipartFile);
 
     // send request
@@ -114,6 +97,9 @@ class RegisterState extends State<Register> with SingleTickerProviderStateMixin{
 
     if (response.statusCode == "200") {
       print(response);
+      Navigator.push(context, MaterialPageRoute(builder: (context){
+            return Login();
+          }));
     }
     print(respStr);
 

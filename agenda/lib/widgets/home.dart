@@ -53,7 +53,7 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin{
 
   String msg='';
   Future<List> _login() async {
-    final response= await http.post("https://41a6dccf4551.ngrok.io/api/login",headers:{
+    final response= await http.post("https://5b7a400119b2.ngrok.io/api/login",headers:{
       'Accept': 'application/json',
     }, body: {
       "username":username.text,
@@ -70,8 +70,6 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin{
       print(decoded);
       setToken(token);
       getToken();
-      int test=11%7;
-      print(test);
 
       Navigator.push(context, MaterialPageRoute(builder: (context){
             return EventScreen();
@@ -101,15 +99,13 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin{
         fit: StackFit.expand,
         children: <Widget>[
           Container(
-        color: Colors.white,
-        child: CustomPaint(
-          painter: CurvePainter(),
-        )),
+          color: Colors.white,
+          child: CustomPaint(
+            painter: CurvePainter(),
+          )),
           new Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              
-              //Home().createState().pp(),
               new Image(
                 image: new AssetImage("assets/calendar.png"),
                 height: _logoAnimation.value*99,

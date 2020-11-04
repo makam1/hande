@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:Hande/models/login.dart';
+import 'package:Hande/widgets/home.dart';
 import 'package:Hande/widgets/register.dart';
 import 'package:flutter/material.dart';
 import 'package:Hande/models/users.dart';
@@ -75,7 +75,7 @@ class UsersScreenState extends State<UsersScreen> {
   Future<List> getData() async{
     String token = await LoginState().getToken();
     String newStr = token.substring(1, token.length-1);
-    final response= await http.get('https://a6038d7ea20e.ngrok.io/api/users',headers:{
+    final response= await http.get('https://5b7a400119b2.ngrok.io/api/users',headers:{
        'Accept': 'application/json',
        'Authorization': 'Bearer $newStr',   
        });

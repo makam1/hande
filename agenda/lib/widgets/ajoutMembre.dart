@@ -53,7 +53,7 @@ class AjoutMembreState extends State<AjoutMembre> with SingleTickerProviderState
 
     Map<String, String> headers = { "Authorization": "Bearer $newStr",};
 
-    var uri = Uri.parse("https://d0aac673.ngrok.io/api/ajout");
+    var uri = Uri.parse("https://5b7a400119b2.ngrok.io/api/ajout");
       var request = new http.MultipartRequest("POST", uri);
         request.headers.addAll(headers);
         if(imageFile==null){
@@ -195,8 +195,7 @@ Future<File> getImageFileFromAssets(String path) async {
                   new DateTimeField(
                   controller: datenaissance,
                   decoration: new InputDecoration(
-                    labelText:age==null?"Date de naissance":age<=18?
-                    "erreur":formatDate(choix, [dd, '-', mm, '-', yyyy]), 
+                    labelText:age==null?"Date de naissance":formatDate(choix, [dd, '-', mm, '-', yyyy]), 
                   icon:IconButton (
                     icon:new Icon(
                       Icons.date_range,
@@ -430,13 +429,16 @@ Future<File> getImageFileFromAssets(String path) async {
         return AlertDialog(
           title: new Text("Renseigner les champs suivants"),
           content: SingleChildScrollView(
-             child: Column(
+              scrollDirection: Axis.horizontal,
+            child: Row(
             children: <Widget>[
-                  new ColorPicker(
+              Expanded(
+                 child: new ColorPicker(
                     color: Colors.blue,
                     onChanged: (value){color=value.toString(); }
-                  ),
-                  new MaterialButton(
+                  ),),
+                  Expanded(
+                  child: new MaterialButton(
                   color: Colors.white,
                   textColor: Colors.black,
                   child: new Text(
@@ -447,7 +449,7 @@ Future<File> getImageFileFromAssets(String path) async {
                   },
                   splashColor: Colors.black,
                 
-        )])));
+        ))])));
         }
         );}
 }
