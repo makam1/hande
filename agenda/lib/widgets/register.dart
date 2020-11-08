@@ -4,6 +4,7 @@ import 'package:Hande/models/login.dart';
 import 'package:Hande/widgets/UsersList.dart';
 import 'package:Hande/widgets/home.dart';
 import 'package:async/async.dart';
+import 'package:flutter/services.dart';
 import 'package:path/path.dart' as path;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -69,7 +70,7 @@ class RegisterState extends State<Register> with SingleTickerProviderStateMixin{
     Map<String, String> headers = { "Authorization": "Bearer $newStr",};
 
     // string to uri
-    var uri = Uri.parse("https://5b7a400119b2.ngrok.io/inscription");
+    var uri = Uri.parse("https://5ea9cba3cb38.ngrok.io/inscription");
 
     // new multipart request
     var request = new http.MultipartRequest("POST", uri);
@@ -119,7 +120,7 @@ class RegisterState extends State<Register> with SingleTickerProviderStateMixin{
                         shape: BoxShape.circle,
                         image: new DecorationImage(
                             fit: BoxFit.fill,
-                            image: new AssetImage("assets/calendar.png")
+                            image: new AssetImage("assets/profil.png")
                             )
                         )
       );
@@ -155,15 +156,16 @@ class RegisterState extends State<Register> with SingleTickerProviderStateMixin{
                     //     )
                     children: <Widget>[
                       new Padding(
-                padding: const EdgeInsets.only(left:100.0),
+                padding: const EdgeInsets.only(left:150.0),
 
                 ),
-                          _decideImageWidget(),
+                _decideImageWidget(),
                           new Padding(
                 padding: const EdgeInsets.only(top: 70.0),
 
                 ),
                     IconButton (
+              padding: const EdgeInsets.only(top: 80.0),
                     icon:new Icon(
                       Icons.add_a_photo,
                     ),
@@ -204,7 +206,7 @@ class RegisterState extends State<Register> with SingleTickerProviderStateMixin{
                   new DateTimeField(
                     controller: datenaissance,
                   decoration: new InputDecoration(
-                    labelText:age==null?"Date de naissance":age<=18?
+                    labelText:age==null?"Date de naissance":age<18?
                     "erreur":formatDate(choix, [dd, '-', mm, '-', yyyy]), 
                   icon:IconButton (
                     icon:new Icon(
@@ -241,7 +243,10 @@ class RegisterState extends State<Register> with SingleTickerProviderStateMixin{
                   child: new Text(
                     "Envoyer",
                   ),
-                  onPressed:()  {
+                  onPressed:() {
+                    if(age<18){
+                        _showDialog() ;
+                    }
                    _register();
                   },
                   splashColor: Colors.black,
@@ -311,12 +316,28 @@ class RegisterState extends State<Register> with SingleTickerProviderStateMixin{
       },
     );
   } 
-   _openGallerie(BuildContext context) async {
-    var image = await ImagePicker.pickImage(source: ImageSource.gallery);
 
+Future<File> getImageFileFromAssets(String path) async {
+    
+  final byteData = await rootBundle.load('assets/$path');
+
+  final file = File('${(await getTemporaryDirectory()).path}/$path');
+  await file.writeAsBytes(byteData.buffer.asUint8List(byteData.offsetInBytes, byteData.lengthInBytes));
+
+  return file;
+}
+   _openGallerie(BuildContext context) async {
+
+    var image = await ImagePicker.pickImage(source: ImageSource.gallery);
+    
     this.setState((){
+      if(image==null){   
+      }
       imageFile = image;
     });
+    if(imageFile==null){
+     imageFile = await getImageFileFromAssets('/profil.png');
+    }
     Navigator.of(context).pop();
   }
 

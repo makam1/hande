@@ -1,6 +1,7 @@
 
 import 'dart:io';
 
+import 'package:Hande/widgets/WeekEvent.dart';
 import 'package:Hande/widgets/home.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/cupertino.dart';
@@ -53,7 +54,7 @@ class AjoutMembreState extends State<AjoutMembre> with SingleTickerProviderState
 
     Map<String, String> headers = { "Authorization": "Bearer $newStr",};
 
-    var uri = Uri.parse("https://5b7a400119b2.ngrok.io/api/ajout");
+    var uri = Uri.parse("https://5ea9cba3cb38.ngrok.io/api/ajout");
       var request = new http.MultipartRequest("POST", uri);
         request.headers.addAll(headers);
         if(imageFile==null){
@@ -92,7 +93,7 @@ class AjoutMembreState extends State<AjoutMembre> with SingleTickerProviderState
       print(response);
     }
     Navigator.push(context, MaterialPageRoute(builder: (context){
-                    return Login();
+                    return EventScreen();
                     }));
     print(respStr);
 
@@ -119,7 +120,7 @@ Future<File> getImageFileFromAssets(String path) async {
                         shape: BoxShape.circle,
                         image: new DecorationImage(
                             fit: BoxFit.fill,
-                            image: new AssetImage("assets/calendar.png")
+                            image: new AssetImage("assets/profil.png")
                             )
                         )
       );
@@ -132,6 +133,7 @@ Future<File> getImageFileFromAssets(String path) async {
   Widget build(BuildContext context){
     return new Scaffold(
       backgroundColor: Colors.white,
+      resizeToAvoidBottomInset: false, // set it to false
       body: new Stack(
         fit: StackFit.expand,
         children: <Widget>[
@@ -146,15 +148,17 @@ Future<File> getImageFileFromAssets(String path) async {
               new Row(
                     children: <Widget>[
                       new Padding(
-                padding: const EdgeInsets.only(left:100.0),
+                padding: const EdgeInsets.only(left:150.0),
 
                 ),
                           _decideImageWidget(),
                           new Padding(
-                padding: const EdgeInsets.only(top: 70.0),
+                padding: const EdgeInsets.only(top: 10.0),
 
                 ),
                     IconButton (
+                    padding: const EdgeInsets.only(top: 80.0),
+
                     icon:new Icon(
                       Icons.add_a_photo,
                     ),
@@ -336,8 +340,7 @@ Future<File> getImageFileFromAssets(String path) async {
     Navigator.of(context).pop();
 
     }  
-
-
+    
   Future <void> _imageDialog(BuildContext context) {
     return showDialog(
       context: context,
@@ -377,7 +380,6 @@ Future<File> getImageFileFromAssets(String path) async {
              child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-
               new Form(
                 child: new Container(
                   padding: const EdgeInsets.only(left:50.0,right: 50.0),
@@ -427,29 +429,28 @@ Future<File> getImageFileFromAssets(String path) async {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: new Text("Renseigner les champs suivants"),
+          title: new Text("Choisissez la couleur représentée sur le tableau"),
           content: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
             child: Row(
             children: <Widget>[
-              Expanded(
-                 child: new ColorPicker(
+              SizedBox(width: 150,
+               child: new ColorPicker(
                     color: Colors.blue,
-                    onChanged: (value){color=value.toString(); }
-                  ),),
-                  Expanded(
-                  child: new MaterialButton(
-                  color: Colors.white,
-                  textColor: Colors.black,
-                  child: new Text(
-                    "Envoyer",
-                  ),
-                  onPressed:()  {
-                   ajout();
-                  },
-                  splashColor: Colors.black,
+                    onChanged: (value){
+                      color=value.toString(); }
+              ),),
+              new MaterialButton(
+              color: Colors.white,
+              textColor: Colors.black,
+              child: new Text(
+                "Envoyer",
+              ),
+              onPressed:()  {
+                ajout();
+              },
+              splashColor: Colors.black,
                 
-        ))])));
+        )])));
         }
         );}
 }

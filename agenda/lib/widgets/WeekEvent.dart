@@ -216,7 +216,7 @@ class EventScreenState extends State<EventScreen> {
   Future<List> getEvents() async{
     String token = await LoginState().getToken();
     String newStr = token.substring(1, token.length-1);
-    final response= await http.get('https://5b7a400119b2.ngrok.io/api/evenement/liste',headers:{
+    final response= await http.get('https://5ea9cba3cb38.ngrok.io/api/evenement/liste',headers:{
        'Accept': 'application/json',
        'Authorization': 'Bearer $newStr',   
        });

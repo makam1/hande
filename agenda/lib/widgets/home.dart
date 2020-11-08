@@ -1,11 +1,14 @@
 
 import 'dart:convert';
+import 'dart:io';
 import 'package:Hande/widgets/WeekEvent.dart';
 import 'package:Hande/widgets/ajoutEvenement.dart';
 import 'package:Hande/widgets/ajoutMembre.dart';
 import 'package:Hande/widgets/listeEnfants.dart';
 import 'package:Hande/widgets/UsersList.dart';
 import 'package:Hande/widgets/register.dart';
+import 'package:flutter/services.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:jaguar_jwt/jaguar_jwt.dart';
 import 'package:flutter/material.dart';
@@ -51,9 +54,10 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin{
 
   var token='';
 
+
   String msg='';
   Future<List> _login() async {
-    final response= await http.post("https://5b7a400119b2.ngrok.io/api/login",headers:{
+    final response= await http.post("https://5ea9cba3cb38.ngrok.io/api/login",headers:{
       'Accept': 'application/json',
     }, body: {
       "username":username.text,
@@ -132,14 +136,14 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin{
                   keyboardType: TextInputType.text,
                   obscureText: true,
                 ),
-                new Container(
+                /*new Container(
                   padding: const EdgeInsets.only(left:80.0,top: 10.0),
                   child: new Text(
                     "Mot de passe oublié?",
                     style: TextStyle(color:Colors.red),
 
                   ),  
-                ),
+                ),*/
                 new Padding(
                 padding: const EdgeInsets.only(left:85.0,top: 10.0),
 

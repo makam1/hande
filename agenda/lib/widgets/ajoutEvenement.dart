@@ -45,7 +45,7 @@ class AjoutEvenementState extends State<AjoutEvenement>{
     enfant= await ListeEnfants().getId();
     
 
-    var uri = Uri.parse("https://5b7a400119b2.ngrok.io/api/evenement");
+    var uri = Uri.parse("https://5ea9cba3cb38.ngrok.io/api/evenement");
       var request = new http.MultipartRequest("POST", uri);
         request.headers.addAll(headers);
 
@@ -80,6 +80,8 @@ class AjoutEvenementState extends State<AjoutEvenement>{
     return new Scaffold(
       
       backgroundColor: Colors.white,
+      resizeToAvoidBottomInset: false, // set it to false
+
       body: new Stack(
         fit: StackFit.expand,
         children: <Widget>[
@@ -90,7 +92,7 @@ class AjoutEvenementState extends State<AjoutEvenement>{
             )),
           new Form(
             child: new Container(
-              padding: const EdgeInsets.only(left:50.0,right: 50.0,top:09.0),
+              padding: const EdgeInsets.only(left:50.0,right: 50.0,top:100.0),
               child: new Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               
