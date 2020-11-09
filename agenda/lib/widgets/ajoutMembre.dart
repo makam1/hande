@@ -54,7 +54,7 @@ class AjoutMembreState extends State<AjoutMembre> with SingleTickerProviderState
 
     Map<String, String> headers = { "Authorization": "Bearer $newStr",};
 
-    var uri = Uri.parse("https://5ea9cba3cb38.ngrok.io/api/ajout");
+    var uri = Uri.parse("https://59a94914a712.ngrok.io/api/ajout");
       var request = new http.MultipartRequest("POST", uri);
         request.headers.addAll(headers);
         if(imageFile==null){
@@ -324,6 +324,9 @@ Future<File> getImageFileFromAssets(String path) async {
     this.setState((){
       imageFile = image;
     });
+    if(imageFile==null){
+     imageFile = await getImageFileFromAssets('/profil.png');
+    }
     Navigator.of(context).pop();
   }
 
@@ -334,7 +337,9 @@ Future<File> getImageFileFromAssets(String path) async {
     this.setState((){  
       imageFile = image;
     });
-
+    if(imageFile==null){
+     imageFile = await getImageFileFromAssets('/profil.png');
+    }
     GallerySaver.saveImage(imageFile.path);
     
     Navigator.of(context).pop();

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:Hande/widgets/WeekEvent.dart';
 import 'package:Hande/widgets/home.dart';
 import 'package:Hande/widgets/register.dart';
 import 'package:flutter/material.dart';
@@ -32,34 +33,39 @@ final List users;
         imageName=users[index]['imageName'];
       return GestureDetector(
          child: Container(
-           padding: EdgeInsets.all(10.0),
+      padding: EdgeInsets.only(top: 60.0),
          //  color: index % 2==0? Colors.redAccent:Colors.yellowAccent,
            child: Column(
+             
              mainAxisAlignment: MainAxisAlignment.spaceBetween,
              crossAxisAlignment: CrossAxisAlignment.start,
              children: <Widget>[
+               
+               Row(
+                 children: [
                 new Container(
-                    width: 50.0,
-                    height: 50.0,
+                    width: 80.0,
+                    height: 80.0,
                     decoration: new BoxDecoration(
                         shape: BoxShape.circle,
                         image: new DecorationImage(
                             fit: BoxFit.fill,
                             image: 
-                            new NetworkImage("https://github.com/makam1/ASA/blob/master/public/images/users/$imageName?raw=true")
+                            new NetworkImage("https://40232c3dc018.ngrok.io/ASA2/public/images/users/$imageName?raw=true")
                             //AssetImage("assets/calendar.png")
                             )
                         )
                 ),
-                new Text(users[index]['imageName'],style:TextStyle(fontWeight: FontWeight.bold,fontSize:16.0)),
-                new Text(users[index]['nom'],style:TextStyle(fontSize:16.0)),
-            ],
+                new Container(
+                padding: EdgeInsets.only(left: 100.0),
+               child: new Text(users[index]['username'],style:TextStyle(fontSize:18.0,fontWeight: FontWeight.bold,),textAlign: TextAlign.center),
+                )],
           ), 
-        ),
+          ])),
         onTap:(){
           setId(users[index]['id']);
           Navigator.push(context, MaterialPageRoute(builder: (context){
-            return Register();
+            return EventScreen();
           }));
         }
       );
@@ -75,7 +81,7 @@ class UsersScreenState extends State<UsersScreen> {
   Future<List> getData() async{
     String token = await LoginState().getToken();
     String newStr = token.substring(1, token.length-1);
-    final response= await http.get('https://5ea9cba3cb38.ngrok.io/api/users',headers:{
+    final response= await http.get('https://59a94914a712.ngrok.io/api/users',headers:{
        'Accept': 'application/json',
        'Authorization': 'Bearer $newStr',   
        });

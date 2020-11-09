@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:Hande/models/users.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 
 class ChildrenList extends StatelessWidget{
@@ -49,7 +50,7 @@ final List users;
                         image: new DecorationImage(
                             fit: BoxFit.fill,
                             image: 
-                            new NetworkImage("https://github.com/makam1/ASA/blob/master/public/images/users/$imageName?raw=true")
+                            new NetworkImage("https://40232c3dc018.ngrok.io/ASA2/public/images/users/$imageName?raw=true")
                             )
                         )
                 ),
@@ -84,7 +85,7 @@ class ChildrenScreenState extends State<ChildrenScreen> {
   Future<List> getChildren() async{
     String token = await LoginState().getToken();
     String newStr = token.substring(1, token.length-1);
-    final response= await http.get('https://5ea9cba3cb38.ngrok.io/api/evenement/liste/enfants',headers:{
+    final response= await http.get('https://59a94914a712.ngrok.io/api/evenement/liste/enfants',headers:{
        'Accept': 'application/json',
        'Authorization': 'Bearer $newStr',   
        });

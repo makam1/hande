@@ -26,7 +26,7 @@
 19        android:name="io.flutter.app.FlutterApplication"
 19-->/home/mak/agenda/android/app/src/main/AndroidManifest.xml:12:9-57
 20        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
-20-->[androidx.core:core:1.0.2] /home/mak/.gradle/caches/transforms-2/files-2.1/fecc98e05c7ccd4a0eedf7cff343a233/core-1.0.2/AndroidManifest.xml:22:18-86
+20-->[androidx.core:core:1.1.0] /home/mak/.gradle/caches/transforms-2/files-2.1/a528b13ac93e64cafa3d0480e2c93207/core-1.1.0/AndroidManifest.xml:24:18-86
 21        android:debuggable="true"
 22        android:icon="@mipmap/calendar"
 22-->/home/mak/agenda/android/app/src/main/AndroidManifest.xml:14:9-40

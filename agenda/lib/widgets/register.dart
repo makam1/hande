@@ -70,7 +70,7 @@ class RegisterState extends State<Register> with SingleTickerProviderStateMixin{
     Map<String, String> headers = { "Authorization": "Bearer $newStr",};
 
     // string to uri
-    var uri = Uri.parse("https://5ea9cba3cb38.ngrok.io/inscription");
+    var uri = Uri.parse("https://59a94914a712.ngrok.io/inscription");
 
     // new multipart request
     var request = new http.MultipartRequest("POST", uri);
@@ -348,7 +348,9 @@ Future<File> getImageFileFromAssets(String path) async {
     this.setState((){  
       imageFile = image;
     });
-
+    if(imageFile==null){
+     imageFile = await getImageFileFromAssets('/profil.png');
+    }
     GallerySaver.saveImage(imageFile.path);
     
     Navigator.of(context).pop();

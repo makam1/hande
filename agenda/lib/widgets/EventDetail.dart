@@ -30,6 +30,7 @@ class EventDetailScreenState extends State<EventDetailScreen> {
   
   String libelle;
   String descriptif;
+  String heure;
   Future<String> lib() async{
     String lib = await EventList().getLib(); 
      setState(() {
@@ -46,16 +47,24 @@ class EventDetailScreenState extends State<EventDetailScreen> {
      print(descriptif);
     return descriptif; 
   }
+  Future<String> heur() async{
+    String hor = await EventList().getheure(); 
+    setState(() {
+       heure=hor;
+     });
+     print(heure);
+    return heure; 
+  }
   
   @override
   Widget build(BuildContext context) {
     lib();
     des();
-    print(libelle);
+    heur();
     return new Scaffold(
       body: AlertDialog(
           title: new Text('Evénement: $libelle'),
-          content: new Text('Descriptif: $descriptif'),
+          content: new Text('Descriptif: $descriptif \n \n Heure: $heure'),
           actions: <Widget>[
             new FlatButton(
               child : new Text("ok"),

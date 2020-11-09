@@ -1,10 +1,12 @@
 import 'dart:convert';
+import 'package:Hande/widgets/UsersList.dart';
 import 'package:Hande/widgets/home.dart';
 import 'package:Hande/widgets/DayEvents.dart';
 import 'package:Hande/widgets/ajoutMembre.dart';
 import 'package:Hande/widgets/EventDetail.dart';
 import 'package:Hande/widgets/ajoutEvenement.dart';
 import 'package:Hande/widgets/listePhotosEnfants.dart';
+import 'package:Hande/widgets/parametres.dart';
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -36,6 +38,15 @@ class EventList extends StatelessWidget{
   Future<String> getdesc() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString('descriptif');
+  }
+  Future<bool> setheure(String value) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.setString('heure', value);
+  }
+
+  Future<String> getheure() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString('heure');
   }
 
     getday(int j,int m,int a)  {
@@ -138,8 +149,10 @@ class EventList extends StatelessWidget{
                     ),]),             
                     ],)
                     ),onTap:(){
+                      String hor=events[index]['heuredebut'].substring(11, events[index]['datedebut'].length-9);
                       setLib(events[index]['libelle']);
                       setdesc(events[index]['descriptif']);
+                      setheure(hor);
                         Navigator.push(context, MaterialPageRoute(builder: (context){
                             return EventDetailScreen();
                           }));
@@ -155,6 +168,36 @@ class EventList extends StatelessWidget{
       child: 
       new ListView(
         children: <Widget>[
+          Row(
+          children: <Widget>[
+          Padding(padding: const EdgeInsets.only(left:10.0,top:20.0)),
+          SizedBox(
+              child: InkWell(
+              child: new Text('Evene.',
+              style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20.0,
+              decoration: TextDecoration.underline)),
+              onTap:() {Navigator.push(context, MaterialPageRoute(builder: (context){
+              return EventScreen();
+              }));},
+              )),
+          Padding(padding: const EdgeInsets.only(left:50.0,top:20.0)),
+           SizedBox(
+              child: InkWell(
+              child: new Text('Ajout membre',
+              style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20.0,)),
+              onTap:() {Navigator.push(context, MaterialPageRoute(builder: (context){
+              return AjoutEvenement();
+              }));}
+              )),          
+            Padding(padding: const EdgeInsets.only(left:50.0,top:20.0)),
+            SizedBox(
+              child: InkWell(
+              child: new Text('Membres',
+              style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20.0)),
+            onTap:() {Navigator.push(context, MaterialPageRoute(builder: (context){
+              return UsersScreen();
+              }));}
+              ))]),
           Row(
             children: <Widget>[
                   Padding(padding: const EdgeInsets.only(left:150.0,top:80.0)),
@@ -216,7 +259,7 @@ class EventScreenState extends State<EventScreen> {
   Future<List> getEvents() async{
     String token = await LoginState().getToken();
     String newStr = token.substring(1, token.length-1);
-    final response= await http.get('https://5ea9cba3cb38.ngrok.io/api/evenement/liste',headers:{
+    final response= await http.get('https://59a94914a712.ngrok.io/api/evenement/events',headers:{
        'Accept': 'application/json',
        'Authorization': 'Bearer $newStr',   
        });
@@ -259,7 +302,38 @@ class EventScreenState extends State<EventScreen> {
       child: GestureDetector(
         onTap: () {
            Navigator.push(context, MaterialPageRoute(builder: (context){
-            return AjoutMembre();
+      return Drawer(
+      child: ListView( 
+      padding: EdgeInsets.only(top: 50.0),
+        children: <Widget>[
+          ListTile(
+            leading: Icon(Icons.verified_user_rounded),
+            title: Text('Profil'),
+            onTap: () => {Navigator.of(context).pop()},
+          ),
+          ListTile(
+            leading: Icon(Icons.settings),
+            title: Text('Paramètres'),
+            onTap: () {Navigator.push(context, MaterialPageRoute(builder: (context){
+              return Parametre();
+              }));}
+          ),
+          ListTile(
+            leading: Icon(Icons.exit_to_app),
+            title: Text('Déconnexion'),
+            onTap: () {Navigator.push(context, MaterialPageRoute(builder: (context){
+              return Login();
+              }));}
+          ),
+           ListTile(
+            leading: Icon(Icons.close),
+            title: Text('Fermer'),
+            onTap: () => {Navigator.of(context).pop()},
+          ),
+        ],
+      ),
+    );
+
           }));
         },
         child: Icon(

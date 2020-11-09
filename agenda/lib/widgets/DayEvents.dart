@@ -64,7 +64,7 @@ class DayListScreenState extends State<DayListScreen> {
   Future<List> getData() async{
     String token = await LoginState().getToken();
     String newStr = token.substring(1, token.length-1);
-    final response= await http.get('https://5ea9cba3cb38.ngrok.io/api/evenement/today',headers:{
+    final response= await http.get('https://59a94914a712.ngrok.io/api/evenement/today',headers:{
        'Accept': 'application/json',
        'Authorization': 'Bearer $newStr',   
        });
